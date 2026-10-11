@@ -1,0 +1,51 @@
+chapter,url,guide,coverage,review
+Introduction,https://frodo45127.github.io/rpfm/manual/intro/what-is-rpfm.html,../SKILL.md,Overview and operational entry point,Chapter reviewed
+1. Installation,https://frodo45127.github.io/rpfm/manual/intro/installation.html,../../setup/references/server-installation.md,Platform/runtime setup; GUI build requirements are separate,Chapter reviewed
+2. First-time configuration,https://frodo45127.github.io/rpfm/manual/intro/first-time-config.html,game-configuration.md,Configuration/schema/dependency guidance; interactive decoder remains GUI,Chapter reviewed
+3. The main window,https://frodo45127.github.io/rpfm/manual/packs/main-window.html,documentation-map.md,GUI navigation notes here and direct chapter link,Chapter reviewed
+"4. Opening, creating and saving Packs",https://frodo45127.github.io/rpfm/manual/packs/pack-operations.html,workflows.md,Pack/file/table/notes operations and persistence,Chapter reviewed
+5. The Pack tree,https://frodo45127.github.io/rpfm/manual/packs/pack-tree.html,workflows.md,Pack/file/table/notes operations and persistence,Chapter reviewed
+6. Pack settings & notes,https://frodo45127.github.io/rpfm/manual/packs/pack-settings.html,workflows.md,Pack/file/table/notes operations and persistence,Chapter reviewed
+7. Dependencies,https://frodo45127.github.io/rpfm/manual/packs/dependencies.html,game-configuration.md,Configuration/schema/dependency guidance; interactive decoder remains GUI,Chapter reviewed
+8. Plugin scripts,https://frodo45127.github.io/rpfm/manual/packs/plugin-scripts.html,scripts-and-projects.md,Workflow guidance and named-tool/GUI/execution boundaries,Chapter reviewed
+9. Lua tests,https://frodo45127.github.io/rpfm/manual/packs/lua-tests.html,scripts-and-projects.md,Workflow guidance and named-tool/GUI/execution boundaries,Chapter reviewed
+10. Overview,https://frodo45127.github.io/rpfm/manual/editors/overview.html,assets-and-specialized.md,Format guidance; external tools/GUI/build support explicitly qualified,Chapter reviewed
+11. DB tables,https://frodo45127.github.io/rpfm/manual/editors/db.html,workflows.md,Pack/file/table/notes operations and persistence,Chapter reviewed
+12. Loc files,https://frodo45127.github.io/rpfm/manual/editors/loc.html,localization.md,Local translation workflow; service/Hub publication boundaries,Chapter reviewed
+13. Text & scripts,https://frodo45127.github.io/rpfm/manual/editors/text.html,scripts-and-projects.md,Workflow guidance and named-tool/GUI/execution boundaries,Chapter reviewed
+14. Images & DDS,https://frodo45127.github.io/rpfm/manual/editors/images.html,assets-and-specialized.md,Format guidance; external tools/GUI/build support explicitly qualified,Chapter reviewed
+15. Video (CA_VP8),https://frodo45127.github.io/rpfm/manual/editors/video.html,assets-and-specialized.md,Format guidance; external tools/GUI/build support explicitly qualified,Chapter reviewed
+16. AnimPack,https://frodo45127.github.io/rpfm/manual/editors/animpack.html,assets-and-specialized.md,Format guidance; external tools/GUI/build support explicitly qualified,Chapter reviewed
+"17. Animations (AnimTable, AnimFragment, MatchedCombat)",https://frodo45127.github.io/rpfm/manual/editors/animations.html,assets-and-specialized.md,Format guidance; external tools/GUI/build support explicitly qualified,Chapter reviewed
+18. Portrait Settings,https://frodo45127.github.io/rpfm/manual/editors/portrait-settings.html,assets-and-specialized.md,Format guidance; external tools/GUI/build support explicitly qualified,Chapter reviewed
+19. Audio,https://frodo45127.github.io/rpfm/manual/editors/audio.html,assets-and-specialized.md,Format guidance; external tools/GUI/build support explicitly qualified,Chapter reviewed
+20. RigidModel,https://frodo45127.github.io/rpfm/manual/editors/rigidmodel.html,assets-and-specialized.md,Format guidance; external tools/GUI/build support explicitly qualified,Chapter reviewed
+"21. Specialised editors (ESF, BMD, UIC, Atlas, …)",https://frodo45127.github.io/rpfm/manual/editors/specialised.html,assets-and-specialized.md,Format guidance; external tools/GUI/build support explicitly qualified,Chapter reviewed
+22. The DB Decoder,https://frodo45127.github.io/rpfm/manual/editors/decoder.html,game-configuration.md,Configuration/schema/dependency guidance; interactive decoder remains GUI,Chapter reviewed
+23. Global Search,https://frodo45127.github.io/rpfm/manual/search/global-search.html,analysis-and-release.md,Search/diagnostics/release guidance with game and coverage limits,Chapter reviewed
+24. Diagnostics panel,https://frodo45127.github.io/rpfm/manual/search/diagnostics.html,analysis-and-release.md,Search/diagnostics/release guidance with game and coverage limits,Chapter reviewed
+25. References panel,https://frodo45127.github.io/rpfm/manual/search/references.html,analysis-and-release.md,Search/diagnostics/release guidance with game and coverage limits,Chapter reviewed
+26. Quick Notes,https://frodo45127.github.io/rpfm/manual/search/notes.html,workflows.md,Pack/file/table/notes operations and persistence,Chapter reviewed
+27. What is MyMod?,https://frodo45127.github.io/rpfm/manual/mymod/overview.html,scripts-and-projects.md,Workflow guidance and named-tool/GUI/execution boundaries,Chapter reviewed
+28. Creating and managing a MyMod,https://frodo45127.github.io/rpfm/manual/mymod/managing.html,scripts-and-projects.md,Workflow guidance and named-tool/GUI/execution boundaries,Chapter reviewed
+29. Import / Export,https://frodo45127.github.io/rpfm/manual/mymod/import-export.html,scripts-and-projects.md,Workflow guidance and named-tool/GUI/execution boundaries,Chapter reviewed
+30. Translator,https://frodo45127.github.io/rpfm/manual/tools/translator.html,localization.md,Local translation workflow; service/Hub publication boundaries,Chapter reviewed
+31. Faction Painter,https://frodo45127.github.io/rpfm/manual/tools/faction-painter.html,assets-and-specialized.md,Format guidance; external tools/GUI/build support explicitly qualified,Chapter reviewed
+32. Unit Editor,https://frodo45127.github.io/rpfm/manual/tools/unit-editor.html,assets-and-specialized.md,Format guidance; external tools/GUI/build support explicitly qualified,Chapter reviewed
+33. Translating a mod,https://frodo45127.github.io/rpfm/manual/tutorials/translating-a-mod.html,localization.md,Local translation workflow; service/Hub publication boundaries,Chapter reviewed
+34. Optimising a mod,https://frodo45127.github.io/rpfm/manual/tutorials/optimising-a-mod.html,analysis-and-release.md,Search/diagnostics/release guidance with game and coverage limits,Chapter reviewed
+35. Datacores (twad_key_deletes),https://frodo45127.github.io/rpfm/manual/tutorials/datacores.html,analysis-and-release.md,Search/diagnostics/release guidance with game and coverage limits,Chapter reviewed
+36. Overview,https://frodo45127.github.io/rpfm/manual/server/overview.html,protocol-and-recovery.md,"Protocol, session recovery, and discovery; example-client limitations stated",Chapter reviewed
+37. Sessions & connection lifecycle,https://frodo45127.github.io/rpfm/manual/server/sessions.html,protocol-and-recovery.md,"Protocol, session recovery, and discovery; example-client limitations stated",Chapter reviewed
+38. WebSocket protocol,https://frodo45127.github.io/rpfm/manual/server/ws-protocol.html,protocol-and-recovery.md,"Protocol, session recovery, and discovery; example-client limitations stated",Chapter reviewed
+38.1. Shared types,https://frodo45127.github.io/rpfm/manual/server/ws-shared-types.html,protocol-and-recovery.md,"Protocol and live catalog; targeted specification review, not every enum field tested",Targeted sections inspected; complete page indexed
+38.2. Commands,https://frodo45127.github.io/rpfm/manual/server/ws-commands.html,protocol-and-recovery.md,"Protocol and live catalog; targeted specification review, not every enum field tested",Targeted sections inspected; complete page indexed
+38.3. Responses,https://frodo45127.github.io/rpfm/manual/server/ws-responses.html,protocol-and-recovery.md,"Protocol, session recovery, and discovery; example-client limitations stated",Chapter reviewed
+39. MCP interface,https://frodo45127.github.io/rpfm/manual/server/mcp.html,protocol-and-recovery.md,"Protocol, session recovery, and discovery; example-client limitations stated",Chapter reviewed
+40. Client example,https://frodo45127.github.io/rpfm/manual/server/client-example.html,protocol-and-recovery.md,"Protocol, session recovery, and discovery; example-client limitations stated",Chapter reviewed
+41. Settings & preferences,https://frodo45127.github.io/rpfm/manual/reference/settings.html,game-configuration.md,Configuration/schema/dependency guidance; interactive decoder remains GUI,Chapter reviewed
+42. Keyboard shortcuts,https://frodo45127.github.io/rpfm/manual/reference/shortcuts.html,documentation-map.md,GUI navigation notes here and direct chapter link,Chapter reviewed
+43. Supported games,https://frodo45127.github.io/rpfm/manual/reference/supported-games.html,game-configuration.md,Configuration/schema/dependency guidance; interactive decoder remains GUI,Chapter reviewed
+44. Schemas & patches,https://frodo45127.github.io/rpfm/manual/reference/schemas.html,game-configuration.md,Configuration/schema/dependency guidance; interactive decoder remains GUI,Chapter reviewed
+45. Telemetry & crash reports,https://frodo45127.github.io/rpfm/manual/reference/telemetry.html,game-configuration.md,Configuration/schema/dependency guidance; interactive decoder remains GUI,Chapter reviewed
+Building from source,https://frodo45127.github.io/rpfm/manual/building.html,../../setup/references/server-installation.md,Platform/runtime setup; GUI build requirements are separate,Chapter reviewed

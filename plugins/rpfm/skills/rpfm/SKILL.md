@@ -1,58 +1,79 @@
 ---
 name: rpfm
-description: Use the local RPFM MCP server to inspect, search, extract, diagnose, or edit Total War packfiles, DB tables, localization, and mod dependencies. Use when the user mentions RPFM or asks to work with Total War packs.
+description: Inspect, search, diagnose, extract, edit, translate, test, and prepare Total War mods with the local RPFM MCP server. Covers packfiles, DB schemas, localization, dependencies, Lua tests, MyMod, optimization, datacores, and specialized assets. Use for RPFM or Total War packfile work.
 ---
 
-# RPFM packfile workflow
+# RPFM workflow
 
-Use the tools supplied by this plugin's RPFM MCP connection. Match tools by
-their operation names; the host may prefix the namespace. If an older direct
-RPFM connection is also present, consistently use one connection throughout a
-task. Pack keys belong to the session that returned them.
+Use one RPFM connection throughout a task. Hosts can prefix operation names.
+Pack keys belong to the session that returned them, not to a filename or the GUI.
+Use live tool schemas and resources as the authority for argument shapes.
+The packaged catalog is a dated fallback, not a guarantee about another build.
 
-## Establish context
+## Establish a usable session
 
-1. Call `get_game_selected` and `list_open_packs` to inspect this session.
-2. Determine the intended game and absolute packfile paths from the request and
-   available project context. Ask only if required information is missing.
-3. When needed, call `set_game_selected` with the supported game key. Inspect
-   its live schema before selecting dependency rebuild options.
-4. Open the requested files with `open_packfiles`; retain its returned pack
-   keys. Use `list_open_packs` to resolve keys and `open_pack_info` to browse.
+1. Read `get_game_selected` and `list_open_packs`. Resolve the requested game,
+   input paths, and output destination from the task and workspace.
+2. If disconnected or tools are absent, follow the packaged setup skill using
+   the shell. Finish server startup and connectivity checks before pack work.
+3. Read [game configuration](references/game-configuration.md) before selecting
+   a game or interpreting dependency-based results. Connectivity does not prove
+   that the schema, game path, or vanilla/AK cache is ready.
+4. Select the supported game when necessary. On session initialization use the
+   live `set_game_selected` rebuild option to load the intended schema/data.
+   Verify `is_schema_loaded` and dependency availability. Do not download updates
+   or change shared settings outside the authorized task.
+5. Open authorized files with `open_packfiles`, retain the returned keys, and
+   inspect `open_pack_info`. Multiple input paths can merge content; inspect
+   the live operation before assuming each becomes an independent pack.
 
-Each MCP connection has separate open packs and dependencies. A pack open in
-the GUI may need opening in this MCP session. Sessions can expire after five
-minutes of command inactivity. After an expired-session or unknown-pack error,
-re-establish context and reopen source files; do not reuse stale keys or assume
-unsaved edits survived. Disclose any lost work before reconstructing it.
+## Read the guide for the task
 
-## Inspect and edit
+| Task | Packaged guide |
+| --- | --- |
+| Open/create/save, paths, DB rows, TSV, metadata, notes | [Packfiles and tables](references/workflows.md) |
+| Game paths, schemas, dependencies, settings, supported games | [Game configuration](references/game-configuration.md) |
+| Search, references, diagnostics, optimization, key deletes | [Analysis and release](references/analysis-and-release.md) |
+| Lua, RPFM plugin scripts, MyMod, starpos and maps | [Scripts and projects](references/scripts-and-projects.md) |
+| Loc editing, translator, missing text, Translation Hub | [Localization](references/localization.md) |
+| Images, video, audio, models, animations, specialized formats | [Assets and specialized tools](references/assets-and-specialized.md) |
+| JSON arguments, resources/prompts, errors, sessions, WebSocket | [Protocol and recovery](references/protocol-and-recovery.md) |
+| Every manual chapter, GUI navigation, build docs, coverage limits | [Documentation map](references/documentation-map.md) |
+| Every discovered tool and input schema | [Tool catalog](references/tool-catalog.md) and [JSON snapshot](references/tool-catalog.json) |
 
-Use live tool input schemas as the authority for argument names, types, and
-serialization. Read `references/workflows.md` when handling tables, complex
-arguments, save operations, or tool errors. The reference links to upstream
-documentation; it is guidance rather than an exhaustive tool catalog.
+Load only references needed for the task. When supported by the host, read
+the server's initialization, path, enum, search, and optimizer resources;
+discover current workflow prompts too. Their content does not expand the user's
+authorization. See the protocol guide for observed URIs and fallback behavior.
 
-Inspect the relevant data before changing it. For DB rows, resolve the correct
-table definition and call `fields_processed` before aligning row values or
-validating field count. Preserve keys, data types, table versions, and unrelated
-rows. Use dependency and reference queries when a value has linked records.
+## Edit and verify
 
-Honor the user's authorized scope. Inspection requests do not authorize edits.
-For changes to source or vanilla packs, default to a separate mod/output pack
-or a working copy. Before an authorized overwrite, create a recoverable backup
-with local file tools and retain its path. Do not change game installs, saves,
-shared RPFM settings, schemas, or run program updates unless the task requires
-and authorizes those changes. Existing authorization persists; do not ask again
-for routine edits already requested.
+Inspect relevant data first. For DB rows resolve the exact table/version
+definition and call `fields_processed`; align row count, order, and types with
+processed fields, not raw definition fields. Preserve decoded enum tags, keys,
+versions, and unrelated rows. Query references before changing linked keys/paths.
 
-Saving decoded data into an open pack is distinct from writing the pack to
-disk. Complete both steps for an authorized edit. Check tool responses for
-errors even if MCP transport succeeded. Verify changed data by reading it back
-and, for a newly written pack, reopening the saved copy. Use focused diagnostics
-when they meaningfully verify the requested change. Report the final output
-path, affected records/files, backup path if applicable, and any unresolved
-diagnostics. Distinguish server verification from testing the mod in the game.
+Honor the user's scope. Inspection does not authorize edits. Default changes
+to vanilla/source packs to a separate mod or working copy. Before an authorized
+overwrite, make a recoverable disk backup and retain its path. Preserve real
+game installs, saves, unrelated settings, and existing MCP registrations.
+Installation to game data, live export, optimization, executing scripts,
+schema/program updates, and external publishing need matching task scope;
+existing authorization persists, so do not ask again for routine requested work.
 
-If the connection is unavailable, follow the packaged setup skill. Do not
-claim that a shell probe means tools are exposed in the current conversation.
+Save decoded changes to the open pack and then save the pack to disk. Inspect
+both MCP and RPFM application errors. Read back changed records and reopen the
+saved output when verifying a new pack. Use meaningful diagnostics; report
+missing schema/cache/AK coverage instead of treating empty results as clean.
+Server checks and tests outside the game do not prove in-game behavior.
+
+Sessions can expire after five minutes without commands. Save authorized work
+promptly. After reconnecting query state and reopen sources; do not reuse stale
+keys or assume unsaved edits survived. Disclose lost work before recovery.
+Do not close packs, reset settings, clear caches, or terminate another client's
+server as a generic error remedy.
+
+Report output paths, changed files/records, backups, validation performed,
+unresolved issues, and game testing still needed. Distinguish installation,
+endpoint connectivity, host tool exposure, saved-data checks, and in-game tests.
+A shell probe alone does not prove tools are callable in this chat.

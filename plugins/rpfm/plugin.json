@@ -4,7 +4,7 @@
     "name": "Wayzer107",
     "url": "https://github.com/Wayzer107"
   },
-  "description": "RPFM packfile tools with server installation, connection setup, and marketplace sharing guidance.",
+  "description": "RPFM server setup and extensive Total War mod workflows, with manual coverage and live MCP reference.",
   "extensions": {
     "com.openai": {
       "interface": {
@@ -22,7 +22,7 @@
         "developerName": "Wayzer107",
         "displayName": "RPFM",
         "logo": "./assets/rpfm.png",
-        "longDescription": "Inspect and edit Total War packfiles through RPFM Server. Includes verified-download installation instructions, server startup and MCP registration, troubleshooting, session recovery, and marketplace distribution guidance. Requires a local MCP client and a compatible RPFM Server on the same computer.",
+        "longDescription": "Work with Total War packfiles through local RPFM Server. Includes Windows/Linux server installation, MCP registration, game/schema/dependency setup, DB and localization editing, diagnostics, Lua tests, MyMod, release optimization, specialized asset guidance, session recovery, and a 50-page manual coverage map with a 155-tool schema snapshot. Requires a compatible local RPFM Server.",
         "shortDescription": "Local Total War pack tools",
         "websiteURL": "https://github.com/Wayzer107/rpfm-plugin"
       },
@@ -40,5 +40,5 @@
   ],
   "license": "MIT",
   "name": "rpfm",
-  "version": "0.3.0"
+  "version": "0.4.0"
 }

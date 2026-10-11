@@ -2,11 +2,11 @@
 
 A Codex plugin for Total War packfile inspection and editing through
 [RPFM Server](https://frodo45127.github.io/rpfm/manual/server/overview.html).
-Includes the original RPFM icon, packfile workflows, and server setup instructions
+Includes the original RPFM icon, extensive operational guides, and server setup instructions
 that work when RPFM is not installed or its server is not running.
 
 This is a community integration, not an official RPFM release.
-Plugin version: **0.3.0**. Marketplace: **rpfm-marketplace**.
+Plugin version: **0.4.0**. Marketplace: **rpfm-marketplace**.
 
 ## Register and install
 
@@ -56,6 +56,21 @@ The pinned Windows x64 download is RPFM v5.1.1, about 280 MiB. Python 3.10+
 is optional for the included connection checker. It is not required for normal
 plugin use.
 
+## Documentation coverage
+
+Version 0.4.0 adds game/schema/dependency readiness, DB/TSV persistence, search
+and diagnostics, Lua tests, MyMod and scripts, localization/translation,
+optimization/key deletes, specialized assets, and protocol recovery. The main
+skill routes tasks to focused guides rather than loading every reference at once.
+
+[Complete documentation audit and chapter map](plugins/rpfm/skills/rpfm/references/documentation-map.md)
+routes all 50 manual pages and states review/testing limits. It includes a
+[coverage CSV](plugins/rpfm/skills/rpfm/references/documentation-coverage.csv),
+[155-tool catalog](plugins/rpfm/skills/rpfm/references/tool-catalog.md), complete
+input schemas, and resource/prompt discovery. GUI-only and external-tool
+workflows are explicitly identified. The generated Rust API was checked at
+entry points and selected relevant structures, not exhaustively symbol by symbol.
+
 ## Use RPFM
 
 Example requests:
@@ -97,10 +112,11 @@ It does not edit packs or settings. Check actual host calls separately.
 
 ## Update or remove
 
-Inspect the current CLI's marketplace upgrade help before updating:
+Update this registered Git marketplace and install the current package:
 
 ```powershell
-codex plugin marketplace upgrade --help
+codex plugin marketplace upgrade rpfm-marketplace --json
+codex plugin add rpfm@rpfm-marketplace --json
 ```
 
 To uninstall this marketplace copy:

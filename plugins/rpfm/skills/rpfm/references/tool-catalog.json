@@ -1,0 +1,3083 @@
+{
+  "captured_at": "2026-10-12",
+  "rpfm_version_observed": "5.1.1",
+  "transport": "streamable-http",
+  "source": "Read-only discovery from http://127.0.0.1:45127/mcp",
+  "warning": "Dated reference only; use the connected server schemas. No pack contents or settings included.",
+  "tools": [
+    {
+      "name": "add_keys_to_key_deletes",
+      "description": "Add keys to the key_deletes table in the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "key_table_name": {
+            "description": "The key table name.",
+            "type": "string"
+          },
+          "keys": {
+            "description": "The keys to add.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "table_file_name": {
+            "description": "The table file name.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "table_file_name",
+          "key_table_name",
+          "keys"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "add_line_to_pack_ignored_diagnostics",
+      "description": "Add a line to the ignored diagnostics list for the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "add_note",
+      "description": "Add a note to the pack identified by `pack_key`. The `note` is a Note JSON object with fields: path (string — the file or folder path to attach the note to), id (u64), text (string — the note content).",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "note": {
+            "description": "The JSON representation of the Note struct.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "note"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "add_packed_files",
+      "description": "Add files from disk to the pack identified by `pack_key`. The `source_paths` are filesystem paths. The `destination_paths` is a JSON array of ContainerPath: [{\"File\": \"db/table/file\"}, {\"Folder\": \"ui/images\"}]. Optionally set `ignore_paths` to skip certain files.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "destination_paths": {
+            "description": "The JSON representation of Vec<ContainerPath> for destination paths.",
+            "type": "string"
+          },
+          "ignore_paths": {
+            "description": "The optional paths to ignore (JSON representation of Option<Vec<PathBuf>>).",
+            "items": {
+              "type": "string"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "source_paths": {
+            "description": "The source filesystem paths.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "pack_key",
+          "source_paths",
+          "destination_paths"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "add_packed_files_from_animpack",
+      "description": "Copy files from an AnimPack owned by `anim_pack_key` into the destination pack `pack_key` (the two may differ). The `source` is the DataSource (\"PackFile\", \"GameFiles\", etc.); `anim_pack_key` is only used when it is \"PackFile\". The `animpack_path` is the AnimPack's internal path. The `container_paths` is a JSON array of ContainerPath, e.g. [{\"File\": \"animations/anim.anim\"}].",
+      "inputSchema": {
+        "$defs": {
+          "DataSource": {
+            "description": "This enum represents the source of the data in the view.",
+            "oneOf": [
+              {
+                "const": "PackFile",
+                "description": "This means the data is from somewhere in our PackFile.",
+                "type": "string"
+              },
+              {
+                "const": "GameFiles",
+                "description": "This means the data is from one of the game files.",
+                "type": "string"
+              },
+              {
+                "const": "ParentFiles",
+                "description": "This means the data comes from a parent PackFile.",
+                "type": "string"
+              },
+              {
+                "const": "AssKitFiles",
+                "description": "This means the data comes from the AssKit files.",
+                "type": "string"
+              },
+              {
+                "const": "ExternalFile",
+                "description": "This means the data comes from an external file.",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "anim_pack_key": {
+            "description": "The key of the pack that owns the AnimPack (only used when `source` is a PackFile).",
+            "type": "string"
+          },
+          "animpack_path": {
+            "description": "The animpack path.",
+            "type": "string"
+          },
+          "container_paths": {
+            "description": "The JSON representation of Vec<ContainerPath> for files to add.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the destination pack the files are copied into (may differ from the AnimPack's).",
+            "type": "string"
+          },
+          "source": {
+            "$ref": "#/$defs/DataSource",
+            "description": "The data source to get the animpack from."
+          }
+        },
+        "required": [
+          "anim_pack_key",
+          "pack_key",
+          "source",
+          "animpack_path",
+          "container_paths"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "add_packed_files_from_pack_file",
+      "description": "Add files from another PackFile to the pack identified by `pack_key`. The `source_pack_path` is the pack path. The `container_paths` is a JSON array of ContainerPath: [{\"File\": \"path\"}].",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "container_paths": {
+            "description": "The JSON representation of Vec<ContainerPath> for files to add.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "source_pack_path": {
+            "description": "The key of the source PackFile.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "source_pack_path",
+          "container_paths"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "add_packed_files_from_pack_file_to_animpack",
+      "description": "Copy files from the pack identified by `source_pack_key` into an AnimPack owned by `pack_key` (the two may differ). The `container_paths` is a JSON array of ContainerPath, e.g. [{\"File\": \"animations/anim.anim\"}]. The `animpack_path` is the AnimPack's internal path.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "animpack_path": {
+            "description": "The animpack path.",
+            "type": "string"
+          },
+          "container_paths": {
+            "description": "The JSON representation of Vec<ContainerPath> for files to add.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the pack that owns the target AnimPack (may differ from the source).",
+            "type": "string"
+          },
+          "source_pack_key": {
+            "description": "The key of the source pack the files are copied from.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_pack_key",
+          "pack_key",
+          "animpack_path",
+          "container_paths"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "assembly_kit_path",
+      "description": "Get the Assembly Kit path for the current game.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "backup_autosave_path",
+      "description": "Get the backup autosave path.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "backup_settings",
+      "description": "Backup the current settings to memory.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "build_starpos",
+      "description": "Build starpos (pre-processing step) for the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "campaign_id": {
+            "description": "The campaign ID.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "process_hlp_spd": {
+            "description": "Whether to process HLP/SPD data.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "pack_key",
+          "campaign_id",
+          "process_hlp_spd"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "build_starpos_check_victory_conditions",
+      "description": "Check if victory conditions file exists for starpos building in the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack. Use `list_open_packs` to get available keys.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "build_starpos_cleanup",
+      "description": "Clean up starpos temporary files for the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "campaign_id": {
+            "description": "The campaign ID.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "process_hlp_spd": {
+            "description": "Whether to process HLP/SPD data.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "pack_key",
+          "campaign_id",
+          "process_hlp_spd"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "build_starpos_get_campaign_ids",
+      "description": "Get campaign IDs for starpos building in the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack. Use `list_open_packs` to get available keys.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "build_starpos_post",
+      "description": "Build starpos (post-processing step) for the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "campaign_id": {
+            "description": "The campaign ID.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "process_hlp_spd": {
+            "description": "Whether to process HLP/SPD data.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "pack_key",
+          "campaign_id",
+          "process_hlp_spd"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "call_command",
+      "description": "Call any IPC command directly. Use this for commands not yet wrapped as named tools.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "command": {
+            "description": "The JSON representation of the Command enum.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "command"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "cascade_edition",
+      "description": "Trigger a cascade edition on all referenced data in the pack identified by `pack_key`. When a key value changes, this propagates the change to all referencing tables. The `definition` is a Definition JSON for the source table. The `changes` is a JSON array of [field, old_value, new_value] tuples, e.g. [[field_json, \"old_key\", \"new_key\"]].",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "changes": {
+            "description": "The JSON representation of Vec<(Field, String, String)> for field changes.",
+            "type": "string"
+          },
+          "definition": {
+            "description": "The JSON representation of the Definition struct.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "table_name": {
+            "description": "The table name.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "table_name",
+          "definition",
+          "changes"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "change_compression_format",
+      "description": "Change the compression format of the pack identified by `pack_key`. Valid formats: \"None\", \"Lzma1\" (legacy), \"Lz4\" (WH3 6.2+), \"Zstd\" (WH3 6.2+). Example: format = \"\\\"None\\\"\"",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "format": {
+            "description": "The JSON representation of the CompressionFormat enum.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "format"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "change_data_is_encrypted",
+      "description": "Change whether the file data is encrypted for the pack identified by `pack_key`. Only PFH4 and newer packs support enabling it.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "value": {
+            "description": "A boolean value.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "pack_key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "change_index_includes_timestamp",
+      "description": "Change whether the pack index includes timestamps for the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "value": {
+            "description": "A boolean value.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "pack_key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "change_index_is_encrypted",
+      "description": "Change whether the pack index (file paths, sizes and timestamps) is encrypted for the pack identified by `pack_key`. Only PFH4 and newer packs support enabling it.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "value": {
+            "description": "A boolean value.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "pack_key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "check_empire_and_napoleon_ak_updates",
+      "description": "Check for Empire/Napoleon Assembly Kit updates.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "check_lua_autogen_updates",
+      "description": "Check for Lua autogen updates.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "check_schema_updates",
+      "description": "Check if there is a schema update available.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "check_translations_updates",
+      "description": "Check for translation updates.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "check_updates",
+      "description": "Check if there is an RPFM update available.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "clean_and_save_pack_as",
+      "description": "Clean the pack identified by `pack_key` from corrupted files and save to a path. Use if normal save fails.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "path": {
+            "description": "The file path.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "path"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "clean_cache",
+      "description": "Clean the decode cache for the provided paths in the pack identified by `pack_key`. The `paths` is a JSON array of ContainerPath, e.g. [{\"File\": \"db/land_units_tables/my_mod\"}, {\"Folder\": \"db\"}].",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "paths": {
+            "description": "The JSON representation of Vec<ContainerPath>.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "paths"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "clear_settings",
+      "description": "Clear all settings and reset to defaults.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "close_all_packs",
+      "description": "Close all currently open packs without saving. Any unsaved changes will be lost.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "close_pack",
+      "description": "Close the pack identified by `pack_key` without saving. Any unsaved changes will be lost.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack. Use `list_open_packs` to get available keys.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "config_path",
+      "description": "Get the config path.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "copy_packed_files",
+      "description": "Copy files to the internal clipboard. The `paths_by_pack` is a JSON object mapping pack key to ContainerPath arrays, e.g. {\"my_pack.pack\": [{\"File\": \"db/table/file\"}]}. Use `paste_packed_files` to paste afterwards.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "paths_by_pack": {
+            "description": "A JSON object mapping pack key to ContainerPath arrays, e.g. {\"my_pack.pack\": [{\"File\": \"db/table/file\"}]}.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "paths_by_pack"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "cut_packed_files",
+      "description": "Cut files to the internal clipboard. Same as copy, but files will be removed from the source pack on paste. The `paths_by_pack` is a JSON object mapping pack key to ContainerPath arrays. Use `paste_packed_files` to paste afterwards.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "paths_by_pack": {
+            "description": "A JSON object mapping pack key to ContainerPath arrays, e.g. {\"my_pack.pack\": [{\"File\": \"db/table/file\"}]}.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "paths_by_pack"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "decode_packed_file",
+      "description": "Decode a file from the pack identified by `pack_key`. The `path` is the internal file path (e.g. \"db/land_units_tables/my_mod\"). The `source` is the data source: \"PackFile\" (user mod), \"GameFiles\" (vanilla), \"ParentFiles\" (dependency mods), \"AssKitFiles\", or \"ExternalFile\". Returns the decoded file content as JSON (RFileDecoded).",
+      "inputSchema": {
+        "$defs": {
+          "DataSource": {
+            "description": "This enum represents the source of the data in the view.",
+            "oneOf": [
+              {
+                "const": "PackFile",
+                "description": "This means the data is from somewhere in our PackFile.",
+                "type": "string"
+              },
+              {
+                "const": "GameFiles",
+                "description": "This means the data is from one of the game files.",
+                "type": "string"
+              },
+              {
+                "const": "ParentFiles",
+                "description": "This means the data comes from a parent PackFile.",
+                "type": "string"
+              },
+              {
+                "const": "AssKitFiles",
+                "description": "This means the data comes from the AssKit files.",
+                "type": "string"
+              },
+              {
+                "const": "ExternalFile",
+                "description": "This means the data comes from an external file.",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "path": {
+            "description": "The path of the file inside the data source.",
+            "type": "string"
+          },
+          "source": {
+            "$ref": "#/$defs/DataSource",
+            "description": "The data source to decode from."
+          }
+        },
+        "required": [
+          "pack_key",
+          "path",
+          "source"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "definition_by_table_name_and_version",
+      "description": "Get a specific definition by table name and version. NOTE: the returned `fields` list is the raw on-disk field layout, not what row data looks like (e.g. colour columns are split into separate r/g/b fields here). Do not use `fields.len()` to size a row for saving — pass this definition to `fields_processed` first to get the field list/count and types that rows must actually match.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "name": {
+            "description": "A string value (e.g., table name).",
+            "type": "string"
+          },
+          "version": {
+            "description": "An integer value (e.g., version).",
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "version"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "definitions_by_table_name",
+      "description": "Get all definitions for a table name. NOTE: the returned `fields` list is the raw on-disk field layout, not what row data looks like (e.g. colour columns are split into separate r/g/b fields here). Pass the definition to `fields_processed` to get the field list/count that rows must actually match.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "delete_definition",
+      "description": "Delete a definition by table name and version.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "name": {
+            "description": "A string value (e.g., table name).",
+            "type": "string"
+          },
+          "version": {
+            "description": "An integer value (e.g., version).",
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "version"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "delete_from_animpack",
+      "description": "Delete files from an AnimPack in the pack identified by `pack_key`. The `animpack_path` is the AnimPack's internal path. The `container_paths` is a JSON array of ContainerPath, e.g. [{\"File\": \"animations/anim.anim\"}].",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "animpack_path": {
+            "description": "The animpack path.",
+            "type": "string"
+          },
+          "container_paths": {
+            "description": "The JSON representation of Vec<ContainerPath> for files to delete.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "animpack_path",
+          "container_paths"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "delete_note",
+      "description": "Delete a note by path and ID in the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "id": {
+            "description": "The note ID.",
+            "format": "uint64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "path": {
+            "description": "The path the note belongs to.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "path",
+          "id"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "delete_packed_files",
+      "description": "Delete files from the pack identified by `pack_key`. The `paths` is a JSON array of ContainerPath: [{\"File\": \"path/to/file\"}, {\"Folder\": \"path/to/folder\"}].",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "paths": {
+            "description": "The JSON representation of Vec<ContainerPath>.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "paths"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "dependencies_art_set_ids",
+      "description": "Get art set IDs from dependencies' campaign_character_arts_tables.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "dependencies_cache_path",
+      "description": "Get the dependencies cache path.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "dependencies_column_values",
+      "description": "Get the distinct values of the column `column_name` of the DB table `table_name` (like `factions_tables`), from the open packs, their parent packs and vanilla.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "column_name": {
+            "description": "Name of the column.",
+            "type": "string"
+          },
+          "table_name": {
+            "description": "Name of the DB table, like `factions_tables`.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "table_name",
+          "column_name"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "diagnostics_check",
+      "description": "Run a full diagnostics check over all open packs.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "check_ak_only_refs": {
+            "description": "Whether to check AK-only references.",
+            "type": "boolean"
+          },
+          "ignored": {
+            "description": "The list of ignored diagnostics.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "ignored",
+          "check_ak_only_refs"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "diagnostics_update",
+      "description": "Update diagnostics incrementally for changed files across all open packs. The `diagnostics` is the Diagnostics JSON from a previous `diagnostics_check` call. The `paths` is a JSON array of ContainerPath for the files that changed, e.g. [{\"File\": \"db/land_units_tables/my_mod\"}].",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "check_ak_only_refs": {
+            "description": "Whether to check AK-only references.",
+            "type": "boolean"
+          },
+          "diagnostics": {
+            "description": "The JSON representation of the Diagnostics struct.",
+            "type": "string"
+          },
+          "paths": {
+            "description": "The JSON representation of Vec<ContainerPath> for paths to check.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "diagnostics",
+          "paths",
+          "check_ak_only_refs"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "duplicate_packed_files",
+      "description": "Duplicate files in-place within the same pack. Files are cloned with a numeric suffix to avoid name collisions. The `paths` is a JSON array of ContainerPath, e.g. [{\"File\": \"db/table/file\"}].",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "paths": {
+            "description": "The JSON representation of Vec<ContainerPath> for files to duplicate.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "paths"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "export_rigid_to_gltf",
+      "description": "Export a RigidModel to glTF format. The `rigid_model` is a RigidModel JSON object (as returned by decoding a .rigid_model_v2 file with `decode_packed_file`). The `output_path` is the destination file path on disk.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "output_path": {
+            "description": "The output path.",
+            "type": "string"
+          },
+          "rigid_model": {
+            "description": "The JSON representation of the RigidModel struct.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "rigid_model",
+          "output_path"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "export_tsv",
+      "description": "Export a table from the pack identified by `pack_key` to a TSV file.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "table_path": {
+            "description": "The path of the table to export.",
+            "type": "string"
+          },
+          "tsv_path": {
+            "description": "The path of the TSV file to export to.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "tsv_path",
+          "table_path"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "extract_packed_files",
+      "description": "Extract files from the pack identified by `pack_key` to disk. The `source_paths` is a JSON object mapping DataSource to ContainerPath arrays, e.g. {\"PackFile\": [{\"File\": \"db/table/file\"}]}. Set `export_as_tsv: true` to export tables as TSV files.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "destination_path": {
+            "description": "The destination path on disk.",
+            "type": "string"
+          },
+          "export_as_tsv": {
+            "description": "Whether to export tables as TSV.",
+            "type": "boolean"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "source_paths": {
+            "description": "The JSON representation of BTreeMap<DataSource, Vec<ContainerPath>>.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "source_paths",
+          "destination_path",
+          "export_as_tsv"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "fields_processed",
+      "description": "Get the processed fields from a definition, with bitwise expansion, enum conversions, and colour-group merging applied. Call this before building or validating row data: table rows must have exactly as many entries as `fields_processed` returns, NOT as many as the raw `fields` list on the Definition (e.g. `definition_by_table_name_and_version`/`definitions_by_table_name` return raw fields, where a colour split into r/g/b counts as 3 fields instead of the 1 merged field rows actually use). Saving a row built against the raw field count/types will fail. The `definition` is a Definition JSON (as returned by `get_table_definition_from_dependency_pack_file`).",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "definition": {
+            "description": "The JSON representation of the Definition struct.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "definition"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "folder_exists",
+      "description": "Check if a folder exists in the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "generate_dependencies_cache",
+      "description": "Generate the dependencies cache for the selected game. This can take a long time (more than 30 seconds), depending on your CPU and disk read speed. If the client is not careful, it can take enough time that the client may trigger a timeout.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "generate_missing_loc_data",
+      "description": "Generate all missing loc entries for the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack. Use `list_open_packs` to get available keys.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "generate_vanilla_translation_source",
+      "description": "Generate the vanilla texts of a source language from the game's locale packs. Returns whether vanilla texts for that language are available.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "src_lang": {
+            "description": "The source language code (e.g. \"SP\").",
+            "type": "string"
+          }
+        },
+        "required": [
+          "src_lang"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_anim_paths_by_skeleton_name",
+      "description": "Get animation paths by skeleton name.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_custom_table_list",
+      "description": "Get custom table names (start_pos_, twad_ prefixes) from the schema.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_dependency_pack_files_list",
+      "description": "Get the list of PackFiles marked as dependencies of the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack. Use `list_open_packs` to get available keys.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_game_selected",
+      "description": "Get the currently selected game key.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_missing_definitions",
+      "description": "Export missing table definitions for the pack identified by `pack_key` to a file (for debugging).",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack. Use `list_open_packs` to get available keys.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_optimizer_options",
+      "description": "Get the default optimizer options.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_pack_file_name",
+      "description": "Get the file name of the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack. Use `list_open_packs` to get available keys.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_pack_file_path",
+      "description": "Get the file path of the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack. Use `list_open_packs` to get available keys.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_pack_settings",
+      "description": "Get the settings of the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack. Use `list_open_packs` to get available keys.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_pack_translation",
+      "description": "Get pack translation data for a language from the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "language": {
+            "description": "The target language code.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "src_lang": {
+            "default": "EN",
+            "description": "The source language code these translations are based on (e.g. \"EN\").",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "language"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_packed_file_raw_data",
+      "description": "Get the raw binary data of a file in the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_packed_files_info",
+      "description": "Get the info of one or more files in the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "values": {
+            "description": "A list of string values.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "pack_key",
+          "values"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_packed_files_names_starting_with_path_from_all_sources",
+      "description": "Get all file names under a path prefix across all data sources (PackFile, GameFiles, ParentFiles). The `path` is a ContainerPath JSON, e.g. {\"Folder\": \"db/land_units_tables\"} to list all files under that folder.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "path": {
+            "description": "The JSON representation of the ContainerPath.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_reference_data_from_definition",
+      "description": "Get valid reference values for columns in a table definition for the pack identified by `pack_key`. The `definition` is a Definition JSON (as returned by `get_table_definition_from_dependency_pack_file`). Set `force` to true to regenerate cached reference data.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "definition": {
+            "description": "The JSON representation of the Definition struct.",
+            "type": "string"
+          },
+          "force": {
+            "description": "Force local reference regeneration.",
+            "type": "boolean"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "table_name": {
+            "description": "The table name.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "table_name",
+          "definition",
+          "force"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_rfile_info",
+      "description": "Get the info of a single file in the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_rfiles_from_all_sources",
+      "description": "Get files from all known sources (PackFile, GameFiles, ParentFiles). The `paths` is a JSON array of ContainerPath, e.g. [{\"File\": \"db/land_units_tables/some_file\"}]. Set `lowercase` to true to normalize path casing.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "lowercase": {
+            "description": "Whether to lowercase paths.",
+            "type": "boolean"
+          },
+          "paths": {
+            "description": "The JSON representation of Vec<ContainerPath>.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "paths",
+          "lowercase"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_schema",
+      "description": "Get the current schema.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_source_data_from_loc_key",
+      "description": "Get the source data of a loc key in the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_table_definition_from_dependency_pack_file",
+      "description": "Get the definition of a table from the dependency database. NOTE: the returned `fields` list is the raw on-disk field layout, not what row data looks like (e.g. colour columns are split into separate r/g/b fields here). Pass the definition to `fields_processed` to get the field list/count that rows must actually match.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_table_list_from_dependency_pack_file",
+      "description": "Get the table names of all DB files in dependency PackFiles.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_table_version_from_dependency_pack_file",
+      "description": "Get the version of a table from the dependency database.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_tables_by_table_name",
+      "description": "Get table paths by table name from the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_tables_from_dependencies",
+      "description": "Get table data from dependencies by table name. NOTE: each returned file's decoded `data` rows are shaped per the PROCESSED fields (colour groups merged, bitwise/enum expanded), but the `definition.fields` bundled in the same file is the RAW on-disk layout and will have a different length/order — do not zip row cells against `definition.fields`. Call `fields_processed` on that definition to get the field list that actually lines up with `data`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "global_search",
+      "description": "Run a global search across the pack identified by `pack_key`. The `search` is a GlobalSearch JSON with fields: pattern (string), replace_text (string), case_sensitive (bool), use_regex (bool), search_on ({db: bool, loc: bool, text: bool, ...}), sources ([{\"Pack\": \"key\"}]), game_key (string). See the `rpfm://examples/global_search` resource for a full example.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "search": {
+            "description": "The JSON representation of the GlobalSearch struct.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "search"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "global_search_replace_all",
+      "description": "Replace all matches in a global search for the pack identified by `pack_key`. The `search` is a GlobalSearch JSON with the `replace_text` field set to the replacement string. See `rpfm://examples/global_search` resource for the full structure.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "search": {
+            "description": "The JSON representation of the GlobalSearch struct.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "search"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "global_search_replace_matches",
+      "description": "Replace specific matches in a global search for the pack identified by `pack_key`. The `search` is the same GlobalSearch JSON used in `global_search` (see `rpfm://examples/global_search` resource). The `matches` is a JSON array of MatchHolder objects from the search results — include only the matches you want to replace.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "matches": {
+            "description": "The JSON representation of Vec<MatchHolder>.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "search": {
+            "description": "The JSON representation of the GlobalSearch struct.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "search",
+          "matches"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "go_to_definition",
+      "description": "Go to the definition of a reference in the pack identified by `pack_key`. Provide table name, column name, and values to search.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "column_name": {
+            "description": "The column name.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "table_name": {
+            "description": "The table name.",
+            "type": "string"
+          },
+          "values": {
+            "description": "The values to search for.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "pack_key",
+          "table_name",
+          "column_name",
+          "values"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "go_to_loc",
+      "description": "Go to a loc key's location in the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "import_dependencies_to_open_pack_file",
+      "description": "Import files from dependencies into the pack identified by `pack_key`. The `paths` is a JSON object mapping DataSource to ContainerPath arrays, e.g. {\"GameFiles\": [{\"File\": \"db/table/file\"}]}.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "paths": {
+            "description": "The JSON representation of BTreeMap<DataSource, Vec<ContainerPath>>.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "paths"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "import_schema_patch",
+      "description": "Import a schema patch from an external source. The `patches` is a JSON object mapping table names to DefinitionPatch objects (same format as `save_local_schema_patch`).",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "patches": {
+            "description": "The JSON representation of HashMap<String, DefinitionPatch>.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "patches"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "import_tsv",
+      "description": "Import a TSV file to a table in the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "table_path": {
+            "description": "The path of the table to import to.",
+            "type": "string"
+          },
+          "tsv_path": {
+            "description": "The path of the TSV file to import from.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "tsv_path",
+          "table_path"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "initialize_my_mod_folder",
+      "description": "Initialize a MyMod folder for mod development.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "game": {
+            "description": "The game key.",
+            "type": "string"
+          },
+          "gitignore": {
+            "description": "Optional gitignore template content.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "description": "The mod name.",
+            "type": "string"
+          },
+          "sublime": {
+            "description": "Whether to add Sublime Text support.",
+            "type": "boolean"
+          },
+          "vscode": {
+            "description": "Whether to add VS Code support.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "game",
+          "sublime",
+          "vscode"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "is_schema_loaded",
+      "description": "Check if a schema is currently loaded.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "is_there_a_dependency_database",
+      "description": "Check if there is a dependency database loaded. Pass true to ensure AssKit data is included.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "value": {
+            "description": "A boolean value.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "list_open_packs",
+      "description": "List all currently open packs with their keys and metadata. Use this to get valid pack_key values for other tools.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "live_export",
+      "description": "Live export the pack identified by `pack_key` to the game folder for testing.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack. Use `list_open_packs` to get available keys.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "load_all_ca_pack_files",
+      "description": "Open all CA (vanilla) PackFiles for the selected game as one merged PackFile.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "local_art_set_ids",
+      "description": "Get local art set IDs from campaign_character_arts_tables in the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack. Use `list_open_packs` to get available keys.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "lua_run_tests",
+      "description": "Run Lua tests against the scripts of all open packs, outside of the game. Scripts run in Lua 5.1 with the game's real script libraries; the game's engine is emulated with objects typed after the Assembly Kit's scripting docs, which record every call made on them. Needs the game's Assembly Kit.\n\nTest file API (a global `rpfm` table):\n- Top-level code runs before the game boots, to set up the world: `local kislev = rpfm.faction { key = \"wh3_main_ksl_kislev\", is_human = true }`. Fields other than `key` are the values returned by the methods with the same name; lists like `region_list` can be plain arrays. Also `rpfm.region { key = ... }`, `rpfm.character { faction = kislev, ... }`, and `rpfm.object(\"TYPE_SCRIPT_INTERFACE\", methods)`. Factions and regions from the game's DB exist even if not set up.\n- `rpfm.test(name, function)` registers a test. Each test runs in a fresh Lua state, after the libraries, the pack's mods (script/campaign/mod/) and the first tick have run.\n- `rpfm.fire(event, { accessor = value, ... })` triggers an event, like `rpfm.fire(\"FactionTurnStart\", { faction = kislev })`.\n- `rpfm.advance_time(seconds)` advances game time, triggering due time triggers, like the ones from `cm:callback`. `rpfm.end_turn()` plays a full round: `WorldStartRound`, `FactionRoundStart` for every faction, then for each faction in creation order its `FactionTurnStart`, the turn events of the regions and characters in its `region_list` and `character_list`, `FactionBeginTurnPhaseNormal`, `FactionAboutToEndTurn` and `FactionTurnEnd`.\n- `rpfm.mock(object, method, value)` changes what a method of an engine object returns after boot, like `rpfm.mock(region, \"owning_faction\", kislev)`; `value` can be a function receiving the call's arguments. Scripts' own globals (like a mod's manager table) can be inspected and changed directly from tests.\n- `rpfm.assert_called(method, args...)`, `rpfm.assert_not_called(method)`, `rpfm.calls_to(method)` and `rpfm.assert_equal(actual, expected)` check what the scripts did. Calls on `cm` are recorded by their method name, like `treasury_mod`.\n\nThe report lists each test with its errors (including errors of the pack's scripts, and in listeners), the undocumented methods it called (whose results are placeholders), and the scripts' output.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "campaign": {
+            "description": "Campaign whose vanilla scripts to load, like \"main_warhammer\". Omit it to load only the script libraries and the mods.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "test_source": {
+            "description": "Code of the Lua test file.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "test_source"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "merge_files",
+      "description": "Merge multiple compatible tables into one in the pack identified by `pack_key`. The `paths` is a JSON array of ContainerPath for the tables to merge, e.g. [{\"File\": \"db/land_units_tables/table1\"}, {\"File\": \"db/land_units_tables/table2\"}]. The `merged_path` is the destination path. Set `delete_source` to true to remove the original files. DB Tables can also be enabled for Delta Merging (if two or more tables edit the same row, it merges their changes into a single row).",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "delete_source": {
+            "description": "Whether to delete source files after merging.",
+            "type": "boolean"
+          },
+          "delta_merge": {
+            "default": false,
+            "description": "Merge rows by key instead of concatenating them. If some rows can't be reconciled\nautomatically, nothing is written and the response is `Response::MergeConflicts` instead.\nDefaults to false.",
+            "type": "boolean"
+          },
+          "merged_path": {
+            "description": "The path for the merged file.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "paths": {
+            "description": "The JSON representation of Vec<ContainerPath> for files to merge.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "paths",
+          "merged_path",
+          "delete_source"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "new_pack",
+      "description": "Create a new empty PackFile.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "new_packed_file",
+      "description": "Create a new file inside the pack identified by `pack_key`. The `path` is the destination path (e.g. \"db/land_units_tables/my_mod\"). NewFile types: {\"DB\": [\"file_name\", \"table_name\", version]}, {\"Loc\": \"name\"}, {\"Text\": [\"name\", \"Plain\"]}, {\"AnimPack\": \"name\"}, {\"VMD\": \"name\"}, {\"WSModel\": \"name\"}, {\"PortraitSettings\": [\"name\", version, []]}.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "new_file": {
+            "description": "The JSON representation of the NewFile enum.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "path": {
+            "description": "The path for the new file inside the pack.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "path",
+          "new_file"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "notes_for_path",
+      "description": "Get all notes under a path in the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "old_ak_data_path",
+      "description": "Get the old Assembly Kit data path.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "open_containing_folder",
+      "description": "Open the folder containing the pack identified by `pack_key` in the file manager.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack. Use `list_open_packs` to get available keys.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "open_pack_info",
+      "description": "Get the info about the pack identified by `pack_key` and the list of files it contains.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack. Use `list_open_packs` to get available keys.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "open_packed_file_in_external_program",
+      "description": "Open a file in the system's default program from the pack identified by `pack_key`. The `source` is the DataSource (\"PackFile\", \"GameFiles\", etc.). The `container_path` is a ContainerPath JSON, e.g. {\"File\": \"db/table/file\"}.",
+      "inputSchema": {
+        "$defs": {
+          "DataSource": {
+            "description": "This enum represents the source of the data in the view.",
+            "oneOf": [
+              {
+                "const": "PackFile",
+                "description": "This means the data is from somewhere in our PackFile.",
+                "type": "string"
+              },
+              {
+                "const": "GameFiles",
+                "description": "This means the data is from one of the game files.",
+                "type": "string"
+              },
+              {
+                "const": "ParentFiles",
+                "description": "This means the data comes from a parent PackFile.",
+                "type": "string"
+              },
+              {
+                "const": "AssKitFiles",
+                "description": "This means the data comes from the AssKit files.",
+                "type": "string"
+              },
+              {
+                "const": "ExternalFile",
+                "description": "This means the data comes from an external file.",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "container_path": {
+            "description": "The JSON representation of the ContainerPath.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "source": {
+            "$ref": "#/$defs/DataSource",
+            "description": "The data source of the file."
+          }
+        },
+        "required": [
+          "pack_key",
+          "source",
+          "container_path"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "open_packfiles",
+      "description": "Open one or more PackFiles. Returns the info about the open pack.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "paths": {
+            "description": "The paths of the PackFiles to open.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "paths"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "optimize_pack_file",
+      "description": "Optimize the pack identified by `pack_key` by removing unchanged/duplicate data. The `options` is an OptimizerOptions JSON with boolean fields: pack_remove_itm_files, table_remove_duplicated_entries, table_remove_itm_entries, table_remove_itnr_entries, table_remove_empty_file, db_optimize_datacored_tables, etc. See the `rpfm://examples/optimizer_options` resource for all fields.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "options": {
+            "description": "The JSON representation of the OptimizerOptions struct.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "options"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "pack_map",
+      "description": "Pack map tiles into the pack identified by `pack_key`. The `tile_maps` is a list of tile map file paths on disk. The `tiles` is a JSON array of [path, name] pairs, e.g. [[\"/path/to/tile\", \"tile_name\"]].",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "tile_maps": {
+            "description": "The tile map paths.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "tiles": {
+            "description": "The JSON representation of Vec<(PathBuf, String)> for tile path/name pairs.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "tile_maps",
+          "tiles"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "packed_file_exists",
+      "description": "Check if a file exists in the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "paste_packed_files",
+      "description": "Paste files from the internal clipboard into the pack identified by `pack_key`. The `destination_path` is the folder path to paste into (empty string for root). Returns the added paths, any cut-deleted paths, and the source pack key.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "destination_path": {
+            "description": "The destination folder path inside the pack (use empty string for root).",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack to paste into.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "destination_path"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "patch_siege_ai",
+      "description": "Patch the SiegeAI of a Siege Map in the pack identified by `pack_key` for Warhammer games.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack. Use `list_open_packs` to get available keys.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "rebuild_dependencies",
+      "description": "Rebuild dependencies. Pass true for full rebuild, false for mod-specific only.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "value": {
+            "description": "A boolean value.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "referencing_columns_for_definition",
+      "description": "Get columns from other tables that reference the given table's definition. The `definition` is a Definition JSON (as returned by `get_table_definition_from_dependency_pack_file` or `definitions_by_table_name`).",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "definition": {
+            "description": "The JSON representation of the Definition struct.",
+            "type": "string"
+          },
+          "table_name": {
+            "description": "The table name.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "table_name",
+          "definition"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "remove_local_schema_patches_for_table",
+      "description": "Remove local schema patches for a table.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "remove_local_schema_patches_for_table_and_field",
+      "description": "Remove local schema patches for a specific field in a table.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "key": {
+            "description": "The setting key.",
+            "type": "string"
+          },
+          "value": {
+            "description": "The string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "rename_packed_files",
+      "description": "Rename files in the pack identified by `pack_key`. The `renames` is a JSON array of [old, new] ContainerPath pairs, e.g. [[{\"File\": \"old/path\"}, {\"File\": \"new/path\"}]].",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "renames": {
+            "description": "The JSON representation of Vec<(ContainerPath, ContainerPath)>.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "renames"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "restore_backup_settings",
+      "description": "Restore settings from the backup.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "save_local_schema_patch",
+      "description": "Save local schema patches to customize column metadata without modifying the upstream schema. The `patches` is a JSON object mapping table names to DefinitionPatch objects, e.g. {\"land_units_tables\": {\"field_patches\": {...}}}.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "patches": {
+            "description": "The JSON representation of HashMap<String, DefinitionPatch>.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "patches"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "save_pack_as",
+      "description": "Save the pack identified by `pack_key` to a new path.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "path": {
+            "description": "The file path.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "path"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "save_packed_file_from_external_view",
+      "description": "Save a file from an external program back to the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "external_path": {
+            "description": "The external file path on disk.",
+            "type": "string"
+          },
+          "internal_path": {
+            "description": "The internal path of the file in the pack.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "internal_path",
+          "external_path"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "save_packed_file_from_view",
+      "description": "Save an edited decoded file back to the pack identified by `pack_key`. The `path` is the internal path (e.g. \"db/land_units_tables/my_mod\"). The `data` is the modified RFileDecoded JSON (same structure returned by `decode_packed_file`).",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "data": {
+            "description": "The JSON representation of the RFileDecoded enum.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "path": {
+            "description": "The path of the file inside the pack.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "path",
+          "data"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "save_packed_files_to_pack_file_and_clean",
+      "description": "Save files to the pack identified by `pack_key` and optionally optimize afterward. The `files` is a JSON array of RFile objects (as returned by decode/get operations). Set `optimize` to true to remove unchanged data after saving.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "files": {
+            "description": "The JSON representation of Vec<RFile>.",
+            "type": "string"
+          },
+          "optimize": {
+            "description": "Whether to optimize after saving.",
+            "type": "boolean"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "files",
+          "optimize"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "save_packfile",
+      "description": "Save the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack. Use `list_open_packs` to get available keys.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "save_schema",
+      "description": "Save the provided schema to disk. The `schema` is the full Schema JSON object (as returned by `get_schema`). Use this after modifying definitions or applying patches.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "schema": {
+            "description": "The JSON representation of the Schema struct.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "schema"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "schemas_path",
+      "description": "Get the schemas path.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "search_references",
+      "description": "Find all references to a value in the pack identified by `pack_key`. The `reference_map` is a JSON object mapping table names to column name arrays, e.g. {\"land_units_tables\": [\"key\", \"unit\"]}. The `value` is the string to search for across those columns.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "reference_map": {
+            "description": "The JSON representation of HashMap<String, Vec<String>>.",
+            "type": "string"
+          },
+          "value": {
+            "description": "The value to search for.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "reference_map",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "set_dependency_pack_files_list",
+      "description": "Set the list of PackFiles marked as dependencies for the pack identified by `pack_key`. The `list` is a JSON array of [enabled, pack_name] pairs, e.g. [[true, \"other_mod.pack\"], [false, \"disabled_mod.pack\"]].",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "list": {
+            "description": "The JSON representation of Vec<(bool, String)> for the dependency list.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "list"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "set_game_selected",
+      "description": "Set the current game. Valid game keys: pharaoh_dynasties, pharaoh, warhammer_3, troy, three_kingdoms, warhammer_2, warhammer, thrones_of_britannia, attila, rome_2, shogun_2, napoleon, empire, arena. Set rebuild_dependencies to true on first call to load schemas and vanilla data.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "game_name": {
+            "description": "The name of the game to select.",
+            "type": "string"
+          },
+          "rebuild_dependencies": {
+            "description": "Whether to rebuild dependencies.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "game_name",
+          "rebuild_dependencies"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "set_pack_file_type",
+      "description": "Set the type of the pack identified by `pack_key`. Valid PFHFileType values: \"Boot\", \"Release\", \"Patch\", \"Mod\", \"Movie\". Example: pack_file_type = \"\\\"Mod\\\"\"",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_file_type": {
+            "description": "The JSON representation of the PFHFileType enum.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "pack_file_type"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "set_pack_settings",
+      "description": "Set the settings of the pack identified by `pack_key`. The `settings` is a PackSettings JSON object containing pack-level configuration.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "settings": {
+            "description": "The JSON representation of the PackSettings struct.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "settings"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "set_video_format",
+      "description": "Change the format of a ca_vp8 video file in the pack identified by `pack_key`. Valid formats: \"CaVp8\" (CA custom VP8) or \"Ivf\" (standard VP8 IVF).",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "format": {
+            "description": "The JSON representation of the SupportedFormats enum.",
+            "type": "string"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "path": {
+            "description": "The path of the video file in the pack.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "path",
+          "format"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "settings_clear_path",
+      "description": "Clear a config path.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "path": {
+            "description": "The file path.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "settings_get_all",
+      "description": "Get all settings at once (bool, i32, f32, string, raw_data, and vec_string maps).",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "settings_get_bool",
+      "description": "Get a boolean setting value by key.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "settings_get_f32",
+      "description": "Get an f32 setting value by key.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "settings_get_i32",
+      "description": "Get an i32 setting value by key.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "settings_get_path_buf",
+      "description": "Get a PathBuf setting value by key.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "settings_get_string",
+      "description": "Get a string setting value by key.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "settings_get_vec_raw",
+      "description": "Get a raw bytes setting value by key.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "settings_get_vec_string",
+      "description": "Get a Vec<String> setting value by key.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "settings_set_bool",
+      "description": "Set a boolean setting value.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "key": {
+            "description": "The setting key.",
+            "type": "string"
+          },
+          "value": {
+            "description": "The boolean value.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "settings_set_f32",
+      "description": "Set an f32 setting value.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "key": {
+            "description": "The setting key.",
+            "type": "string"
+          },
+          "value": {
+            "description": "The float value.",
+            "format": "float",
+            "type": "number"
+          }
+        },
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "settings_set_i32",
+      "description": "Set an i32 setting value.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "key": {
+            "description": "The setting key.",
+            "type": "string"
+          },
+          "value": {
+            "description": "The integer value.",
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "settings_set_path_buf",
+      "description": "Set a PathBuf setting value.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "key": {
+            "description": "The setting key.",
+            "type": "string"
+          },
+          "value": {
+            "description": "The path value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "settings_set_string",
+      "description": "Set a string setting value.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "key": {
+            "description": "The setting key.",
+            "type": "string"
+          },
+          "value": {
+            "description": "The string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "settings_set_vec_raw",
+      "description": "Set a raw bytes setting value.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "key": {
+            "description": "The setting key.",
+            "type": "string"
+          },
+          "value": {
+            "description": "The raw byte values.",
+            "items": {
+              "format": "uint8",
+              "maximum": 255,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "settings_set_vec_string",
+      "description": "Set a Vec<String> setting value.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "key": {
+            "description": "The setting key.",
+            "type": "string"
+          },
+          "value": {
+            "description": "The list of string values.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "table_profiles_path",
+      "description": "Get the table profiles path.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "translations_local_path",
+      "description": "Get the translations local path.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "trigger_backup_autosave",
+      "description": "Trigger a backup autosave for the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack. Use `list_open_packs` to get available keys.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "update_anim_ids",
+      "description": "Update animation IDs with an offset in the pack identified by `pack_key`.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "offset": {
+            "description": "The offset to apply.",
+            "format": "int32",
+            "type": "integer"
+          },
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "starting_id": {
+            "description": "The starting animation ID.",
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "pack_key",
+          "starting_id",
+          "offset"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "update_current_schema_from_asskit",
+      "description": "Update the currently loaded schema with data from the game's Assembly Kit.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "update_empire_and_napoleon_ak",
+      "description": "Update the Empire/Napoleon Assembly Kit files.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "update_lua_autogen",
+      "description": "Update the Lua autogen repository.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "update_main_program",
+      "description": "Update the program to the latest version.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "update_schemas",
+      "description": "Update schemas from the remote repository.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "update_table",
+      "description": "Update a table to the latest schema version in the pack identified by `pack_key`. The `value` is a ContainerPath JSON, e.g. {\"File\": \"db/land_units_tables/my_mod\"}.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "pack_key": {
+            "description": "The key of the target pack.",
+            "type": "string"
+          },
+          "value": {
+            "description": "A string value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pack_key",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "update_translations",
+      "description": "Update the translations repository.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    }
+  ]
+}

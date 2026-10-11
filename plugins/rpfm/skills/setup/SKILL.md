@@ -75,6 +75,16 @@ and makes only read-only calls.
 
 ## Recover and report
 
+After connectivity, initialize the intended game's session using
+[game configuration](../rpfm/references/game-configuration.md). Check selected
+game, actual install path, `is_schema_loaded`, dependency cache, and optional
+Assembly Kit coverage. A newly connected session may have no loaded schema even
+when the running server is healthy. Do not report diagnostics/references ready
+until their data sources are available. If the request is connectivity only,
+report those missing prerequisites without changing shared settings or
+downloading game data. For authorized complete game setup, acquire required
+schemas/configure the intended paths, rebuild dependencies, and verify results.
+
 Each MCP connection owns separate packs and dependencies. GUI packs may
 need opening again in this connection. Sessions can expire after five minutes
 of inactivity. Re-query session state after reconnecting and disclose any

@@ -1,0 +1,157 @@
+{
+  "captured_at": "2026-10-12",
+  "rpfm_version_observed": "5.1.1",
+  "resources": [
+    {
+      "uri": "rpfm://games",
+      "name": "games",
+      "description": "List of all supported Total War game keys.",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "rpfm://enums/PFHFileType",
+      "name": "PFHFileType",
+      "description": "Valid PackFile type values (Boot, Release, Patch, Mod, Movie).",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "rpfm://enums/CompressionFormat",
+      "name": "CompressionFormat",
+      "description": "Valid compression format values (None, Lzma1, Lz4, Zstd).",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "rpfm://enums/DataSource",
+      "name": "DataSource",
+      "description": "Valid data source values indicating where data comes from.",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "rpfm://enums/ContainerPath",
+      "name": "ContainerPath",
+      "description": "ContainerPath enum variants with JSON examples.",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "rpfm://enums/NewFile",
+      "name": "NewFile",
+      "description": "NewFile enum variants for creating files inside packs, with JSON examples.",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "rpfm://enums/SupportedFormats",
+      "name": "SupportedFormats",
+      "description": "Valid video format values (CaVp8, Ivf).",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "rpfm://examples/global_search",
+      "name": "GlobalSearch example",
+      "description": "Example JSON for the GlobalSearch struct used by search tools.",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "rpfm://examples/optimizer_options",
+      "name": "OptimizerOptions example",
+      "description": "Example JSON for OptimizerOptions with all boolean fields.",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "rpfm://reference/initialization",
+      "name": "Initialization guide",
+      "description": "Step-by-step guide for initializing the RPFM MCP server session.",
+      "mimeType": "text/plain"
+    },
+    {
+      "uri": "rpfm://reference/path_conventions",
+      "name": "Path conventions",
+      "description": "Common file path conventions inside Total War PackFiles.",
+      "mimeType": "text/plain"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "create_new_mod",
+      "description": "Step-by-step guide for creating a new mod PackFile from scratch."
+    },
+    {
+      "name": "edit_db_table",
+      "description": "Guide for reading, modifying, and saving a DB table inside a pack."
+    },
+    {
+      "name": "file_operations",
+      "description": "Add, remove, rename, extract, and move files within packs."
+    },
+    {
+      "name": "manage_dependencies",
+      "description": "Set up and work with game dependencies and vanilla data."
+    },
+    {
+      "name": "open_and_inspect_pack",
+      "description": "Walk through opening a PackFile and inspecting its contents."
+    },
+    {
+      "name": "run_diagnostics",
+      "description": "Validate a pack and fix common issues."
+    },
+    {
+      "name": "schema_operations",
+      "description": "Work with table schemas: inspect, update, and patch definitions."
+    },
+    {
+      "name": "search_and_replace",
+      "description": "Find and replace values across all files in a pack."
+    },
+    {
+      "name": "translation_workflow",
+      "description": "Work with localisation and translation data in PackFiles."
+    },
+    {
+      "name": "troubleshooting",
+      "description": "Diagnose and fix common issues with RPFM and PackFiles."
+    },
+    {
+      "name": "tsv_workflow",
+      "description": "Import and export tables as TSV files for batch editing in spreadsheets."
+    }
+  ],
+  "read_resource_examples": {
+    "rpfm://reference/initialization": {
+      "contents": [
+        {
+          "uri": "rpfm://reference/initialization",
+          "mimeType": "text/plain",
+          "text": "RPFM MCP Server Initialization Guide\n=====================================\n\nBefore you can work with PackFiles, you must initialize the server session:\n\nStep 1: Set the game\n    Call: set_game_selected(game_name: \"warhammer_3\", rebuild_dependencies: true)\n    This loads the correct schemas and vanilla game data for the selected title.\n    Valid game keys: pharaoh_dynasties, pharaoh, warhammer_3, troy, three_kingdoms,\n    warhammer_2, warhammer, thrones_of_britannia, attila, rome_2, shogun_2,\n    napoleon, empire, arena.\n\nStep 2: Verify schema is loaded\n    Call: is_schema_loaded()\n    If it returns false, call update_schemas() to download the latest schemas.\n\nStep 3: Open a PackFile\n    Call: open_packfiles(paths: [\"/path/to/my_mod.pack\"])\n    The response returns pack info including the pack_key you'll use for all\n    subsequent operations.\n\nStep 4: Verify dependencies (optional but recommended)\n    Call: is_there_a_dependency_database(value: true)\n    If false, call generate_dependencies_cache() to build the dependency database.\n\nAfter initialization, use list_open_packs() to see all open pack keys at any time.\n"
+        }
+      ]
+    },
+    "rpfm://reference/path_conventions": {
+      "contents": [
+        {
+          "uri": "rpfm://reference/path_conventions",
+          "mimeType": "text/plain",
+          "text": "Total War PackFile Path Conventions\n====================================\n\nFiles inside PackFiles follow specific path conventions:\n\nDB Tables:\n    db/<table_name>/<file_name>\n    Example: db/land_units_tables/my_mod\n    Example: db/unit_stats_land_tables/custom_units\n\nLocalisation (Loc) files:\n    text/db/<file_name>.loc\n    text/<file_name>.loc\n    Example: text/db/my_mod.loc\n\nScripts:\n    script/<path>.lua\n    script/campaign/mod/<script_name>.lua\n    Example: script/campaign/mod/my_mod_script.lua\n    After editing a script, run `diagnostics_check`: it reports Lua syntax errors, invalid DB keys, unknown methods,\n    wrong argument counts and unknown events (all but syntax errors need the game's Assembly Kit installed).\n    To check what a script does, write tests for it and run them with `lua_run_tests`.\n\nUI Images:\n    ui/<path>.png\n    Path may vary depending on the purpose of the image.\n\nModels and Animations:\n    variantmeshes/<path>\n    animations/<path>\n    Example: variantmeshes/wh_variantmodels/hu1/my_unit/my_unit.wsmodel\n\nAudio:\n    audio/<path>.bnk\n\nMaps:\n    terrain/tiles/battle/<map_name>/\n"
+        }
+      ]
+    },
+    "rpfm://examples/global_search": {
+      "contents": [
+        {
+          "uri": "rpfm://examples/global_search",
+          "mimeType": "text/plain",
+          "text": "{\"description\":\"Example GlobalSearch JSON for use with global_search, global_search_replace_all, etc.\",\"example\":{\"case_sensitive\":false,\"game_key\":\"warhammer_3\",\"matches\":{\"anim\":[],\"anim_fragment_battle\":[],\"anim_pack\":[],\"anims_table\":[],\"atlas\":[],\"audio\":[],\"bmd\":[],\"db\":[],\"esf\":[],\"group_formations\":[],\"image\":[],\"loc\":[],\"matched_combat\":[],\"pack\":[],\"portrait_settings\":[],\"rigid_model\":[],\"schema\":{\"matches\":[]},\"sound_bank\":[],\"text\":[],\"uic\":[],\"unit_variant\":[],\"unknown\":[],\"video\":[]},\"pattern\":\"old_unit_name\",\"replace_text\":\"new_unit_name\",\"search_on\":{\"anim\":false,\"anim_fragment_battle\":false,\"anim_pack\":false,\"anims_table\":false,\"atlas\":false,\"audio\":false,\"bmd\":false,\"db\":true,\"esf\":false,\"group_formations\":false,\"image\":false,\"loc\":true,\"matched_combat\":false,\"pack\":false,\"portrait_settings\":false,\"rigid_model\":false,\"schema\":false,\"sound_bank\":false,\"text\":true,\"uic\":false,\"unit_variant\":false,\"unknown\":false,\"video\":false},\"sources\":[{\"Pack\":\"my_mod.pack\"}],\"use_regex\":false},\"notes\":\"The `matches` field is populated by the search results. When calling `global_search`, pass it empty. The `sources` field uses SearchSource: {\\\"Pack\\\": \\\"key\\\"}, \\\"ParentFiles\\\", \\\"GameFiles\\\", \\\"AssKitFiles\\\".\"}"
+        }
+      ]
+    },
+    "rpfm://examples/optimizer_options": {
+      "contents": [
+        {
+          "uri": "rpfm://examples/optimizer_options",
+          "mimeType": "text/plain",
+          "text": "{\"description\":\"OptimizerOptions struct with all boolean fields for pack optimization.\",\"example\":{\"db_import_datacores_into_twad_key_deletes\":false,\"db_optimize_datacored_tables\":false,\"pack_apply_compression\":true,\"pack_apply_encryption\":false,\"pack_remove_duplicated_files\":false,\"pack_remove_itm_files\":true,\"pts_remove_empty_file\":false,\"pts_remove_empty_masks\":false,\"pts_remove_unused_art_sets\":false,\"pts_remove_unused_variants\":false,\"table_remove_duplicated_entries\":true,\"table_remove_empty_file\":true,\"table_remove_itm_entries\":true,\"table_remove_itnr_entries\":true,\"text_remove_agf_files\":false,\"text_remove_model_statistics_files\":false,\"text_remove_unused_xml_map_folders\":false,\"text_remove_unused_xml_prefab_folder\":false},\"field_descriptions\":{\"db_import_datacores_into_twad_key_deletes\":\"Import datacored tables into TWAD key deletes.\",\"db_optimize_datacored_tables\":\"Optimize datacored tables.\",\"pack_apply_compression\":\"Apply the most modern compression format the active game supports (overriding the pack's configured one), so the next save compresses the files.\",\"pack_apply_encryption\":\"Enable both index and data encryption, so the next save encrypts the pack. No-op on packs older than PFH4.\",\"pack_remove_duplicated_files\":\"Remove case-insensitively duplicated files (same name ignoring casing) when their contents are identical, keeping the all-lowercase one or, failing that, the last one.\",\"pack_remove_itm_files\":\"Remove files identical to vanilla (Identical To Master).\",\"pts_remove_empty_file\":\"Remove empty portrait settings files.\",\"pts_remove_empty_masks\":\"Remove empty masks in portrait settings.\",\"pts_remove_unused_art_sets\":\"Remove unused art sets in portrait settings.\",\"pts_remove_unused_variants\":\"Remove unused variants in portrait settings.\",\"table_remove_duplicated_entries\":\"Remove duplicate rows in tables.\",\"table_remove_empty_file\":\"Remove tables with no rows.\",\"table_remove_itm_entries\":\"Remove rows identical to vanilla.\",\"table_remove_itnr_entries\":\"Remove rows identical to vanilla that are not referenced.\",\"text_remove_agf_files\":\"Remove AGF files.\",\"text_remove_model_statistics_files\":\"Remove model statistics files.\",\"text_remove_unused_xml_map_folders\":\"Remove unused XML files in map folders.\",\"text_remove_unused_xml_prefab_folder\":\"Remove unused XML files in prefab folders.\"}}"
+        }
+      ]
+    }
+  },
+  "warning": "Server-provided examples, not executed workflow tests or user authorization."
+}

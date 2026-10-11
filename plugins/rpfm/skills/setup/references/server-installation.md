@@ -101,7 +101,7 @@ Do not assume it stays running indefinitely without clients.
 
 ## 4. Register through the plugin
 
-Install this plugin using its account listing or the supplied marketplace.
+Install this version from the public Git marketplace.
 Its `mcp.json` and compatibility `.mcp.json` already register:
 
 ```json
@@ -148,14 +148,72 @@ successful calls through the host prove the host loaded the plugin connection.
 Check application errors in tool text content too. Tool counts can vary by
 upstream build; 155 were observed during package preparation.
 
-## Linux and other platforms
+## Linux x86_64
 
-Use the official release or upstream-supported installation method matching
-the recipient's platform. Keep the release files together and locate its actual
-`rpfm_server` executable; launch from its installation directory. The endpoint
-and plugin registration are the same when the local server uses its defaults.
-The Windows installation blocks above do not apply to Linux. This package's
-Linux installation and fresh-machine Windows installation have not been tested.
+The pinned official v5.1.1 archive is 266,059,240 bytes (about 254 MiB), with
+additional extraction space needed. Use the following complete Bash procedure
+on a compatible Linux x86_64 system with curl, sha256sum, GNU tar, and zstd.
+Install missing prerequisites through the distribution's supported package
+manager. Do not run the Windows commands on Linux.
+
+```bash
+set -euo pipefail
+rpfmVersion='v5.1.1'
+rpfmAsset='rpfm-v5.1.1-x86_64-unknown-linux-gnu.tar.zst'
+rpfmUrl="https://github.com/Frodo45127/rpfm/releases/download/$rpfmVersion/$rpfmAsset"
+rpfmHash='3b260ac552ba43c3485bd23f90a1ebe1559e2d01c716f687aafeaa69829dfe15'
+rpfmInstall="${XDG_DATA_HOME:-$HOME/.local/share}/rpfm/$rpfmVersion"
+for rpfmRequired in curl sha256sum tar zstd find; do
+    command -v "$rpfmRequired" >/dev/null || { echo "Missing: $rpfmRequired" >&2; exit 1; }
+done
+if [[ -e "$rpfmInstall" || -L "$rpfmInstall" ]]; then
+    echo "Already exists: $rpfmInstall. Reuse it or choose a new directory." >&2
+    exit 1
+fi
+rpfmDownload=$(mktemp -d -t rpfm-download-XXXXXXXX)
+rpfmArchive="$rpfmDownload/$rpfmAsset"
+curl --fail --location --retry 3 "$rpfmUrl" --output "$rpfmArchive"
+printf '%s  %s\n' "$rpfmHash" "$rpfmArchive" | sha256sum --check --status
+mkdir -p "$rpfmInstall"
+tar --zstd -xf "$rpfmArchive" -C "$rpfmInstall"
+mapfile -t rpfmServers < <(find "$rpfmInstall" -type f -name rpfm_server)
+if [[ ${#rpfmServers[@]} -ne 1 ]]; then
+    echo "Expected one rpfm_server; inspect $rpfmInstall" >&2
+    exit 1
+fi
+printf 'Verified installation: %s\nServer executable: %s\nArchive retained: %s\n' \
+    "$rpfmInstall" "${rpfmServers[0]}" "$rpfmArchive"
+```
+
+Check for an existing listener/server first using the platform's process/socket
+tools. Launch the verified executable from its own directory, or start the GUI
+that owns it. Keep the extracted release together. Inspect missing-library errors
+instead of copying only the binary or installing every GUI build dependency.
+The default endpoint and Codex registration commands match Windows. Verify MCP
+readiness; a launched PID alone is insufficient.
+
+Upstream also documents AUR/Flatpak distribution. Flatpak filesystem permissions
+can restrict game access; use the documented Copy Command/Flatseal workflow for
+the intended game folders rather than granting unrestricted access blindly.
+The server's actual presence/location in any alternate package must be verified.
+There is no maintained macOS release in the reviewed installation chapter;
+do not promise the Windows/Linux packages will work there.
+
+For source builds read the selected revision's Cargo targets and
+[build instructions](https://frodo45127.github.io/rpfm/manual/building.html).
+GUI Qt/KDE requirements are not automatically requirements for using a released
+headless server. Do not run a blanket workspace build as the default installer.
+Fresh-machine Windows extraction and Linux installation have not been executed
+during preparation; these are documented procedures, not tested platform claims.
+
+## 6. Configure the intended game
+
+Once connected, read [game configuration](../../rpfm/references/game-configuration.md).
+Verify selected game, game-install path, schema, vanilla cache, and optional AK
+data. Initialize the session's selected game with the live rebuild option;
+acquire missing schemas when authorized and verify actual loaded definitions.
+Connectivity alone does not prove editing/diagnostics readiness. Preserve
+unrelated settings and distinguish missing environment coverage from mod errors.
 
 ## Sessions, scope, and removal
 
