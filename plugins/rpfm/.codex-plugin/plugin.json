@@ -1,0 +1,45 @@
+{
+  "interface": {
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "category": "Productivity",
+    "composerIcon": "./assets/rpfm.png",
+    "defaultPrompt": [
+      "Use RPFM to inspect this Total War packfile and explain its contents.",
+      "Use RPFM to find a table, localization entry, or reference in my mod.",
+      "Use RPFM to make a focused edit and save a separate mod pack."
+    ],
+    "developerName": "Wayzer107",
+    "displayName": "RPFM",
+    "logo": "./assets/rpfm.png",
+    "longDescription": "Inspect and edit Total War packfiles through RPFM Server. Includes verified-download installation instructions, server startup and MCP registration, troubleshooting, session recovery, and marketplace distribution guidance. Requires a local MCP client and a compatible RPFM Server on the same computer.",
+    "shortDescription": "Local Total War pack tools",
+    "websiteURL": "https://github.com/Wayzer107/rpfm-plugin"
+  },
+  "extensions": {
+    "com.openai": {
+      "onboardingSkill": "./skills/setup/SKILL.md"
+    }
+  },
+  "name": "rpfm",
+  "version": "0.3.0",
+  "description": "RPFM packfile tools with server installation, connection setup, and marketplace sharing guidance.",
+  "author": {
+    "name": "Wayzer107",
+    "url": "https://github.com/Wayzer107"
+  },
+  "keywords": [
+    "rpfm",
+    "total-war",
+    "packfiles",
+    "modding",
+    "mcp",
+    "local"
+  ],
+  "homepage": "https://github.com/Wayzer107/rpfm-plugin",
+  "license": "MIT",
+  "skills": "./skills",
+  "mcpServers": "./.mcp.json"
+}

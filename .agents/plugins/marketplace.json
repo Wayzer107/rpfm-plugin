@@ -1,0 +1,20 @@
+{
+  "name": "rpfm-marketplace",
+  "interface": {
+    "displayName": "RPFM Marketplace"
+  },
+  "plugins": [
+    {
+      "name": "rpfm",
+      "source": {
+        "source": "local",
+        "path": "./plugins/rpfm"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
