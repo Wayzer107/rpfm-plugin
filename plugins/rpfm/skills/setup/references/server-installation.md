@@ -102,7 +102,9 @@ Do not assume it stays running indefinitely without clients.
 ## 4. Register through the plugin
 
 Install this version from the public Git marketplace.
-Its `mcp.json` and compatibility `.mcp.json` already register:
+Its `mcp.json` and compatibility `.mcp.json` already register the endpoint
+below. Claude Code reads the same endpoint from `.claude-plugin/plugin.json`
+using its `"type": "http"` spelling for Streamable HTTP:
 
 ```json
 {
@@ -115,7 +117,8 @@ Its `mcp.json` and compatibility `.mcp.json` already register:
 }
 ```
 
-Start a fresh chat after installation; restart Codex if the tools do not load.
+Start a fresh chat after installation; restart Codex or Claude Code if the
+tools do not load. In Claude Code, `/mcp` can reconnect after the server starts.
 Ask: "Set up RPFM and verify its server connection." The setup skill should
 first try `get_game_selected` and `list_open_packs` without changing real packs.
 
@@ -128,7 +131,14 @@ codex mcp add rpfm --url http://127.0.0.1:45127/mcp
 codex mcp get rpfm
 ```
 
-Check `codex mcp list` first and preserve existing registrations. This alternative
+When using Claude Code without the plugin:
+
+```powershell
+claude mcp add --transport http rpfm http://127.0.0.1:45127/mcp
+claude mcp get rpfm
+```
+
+Check `codex mcp list` or `claude mcp list` first and preserve existing registrations. This alternative
 does not install RPFM or launch its server. Do not add it alongside the plugin
 unless a second independent connection is intended. For another client, use
 that client's Streamable HTTP registration flow with the same local endpoint.
@@ -189,7 +199,7 @@ Check for an existing listener/server first using the platform's process/socket
 tools. Launch the verified executable from its own directory, or start the GUI
 that owns it. Keep the extracted release together. Inspect missing-library errors
 instead of copying only the binary or installing every GUI build dependency.
-The default endpoint and Codex registration commands match Windows. Verify MCP
+The default endpoint and Codex/Claude Code registration commands match Windows. Verify MCP
 readiness; a launched PID alone is insufficient.
 
 Upstream also documents AUR/Flatpak distribution. Flatpak filesystem permissions

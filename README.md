@@ -1,6 +1,6 @@
-# Codex developer tools marketplace
+# Codex and Claude Code developer tools marketplace
 
-This Codex Git marketplace contains local development tools for Total War
+This Git marketplace works with both Codex and Claude Code. It contains local development tools for Total War
 packfiles, semantic code work, and Rust analysis. The RPFM package provides the
 existing Total War workflows; Serena and Rust Analyzer MCP are separate plugins
 with their own setup and usage skills.
@@ -40,6 +40,33 @@ Run `codex plugin marketplace upgrade rpfm-marketplace --json` first when the
 marketplace is already registered and new package entries are not visible.
 Each plugin starts its own local MCP process and requires its runtime to be
 installed on the same computer as Codex.
+
+## Register and install with Claude Code
+
+The same repository is also a Claude Code marketplace
+(`.claude-plugin/marketplace.json`):
+
+```powershell
+claude plugin marketplace add Wayzer107/rpfm-plugin
+claude plugin install rpfm@rpfm-marketplace
+claude plugin install serena@rpfm-marketplace
+claude plugin install rust-analyzer-mcp@rpfm-marketplace
+```
+
+Inside a Claude Code session, use `/plugin marketplace add Wayzer107/rpfm-plugin`
+and then `/plugin` to browse and install. Restart Claude Code after installing so
+the MCP servers and skills load, then check them with `/mcp`. Skills are
+namespaced by plugin, for example `/rpfm:setup` or `/serena:serena-setup`.
+
+Update with `claude plugin marketplace update rpfm-marketplace`; remove with
+`claude plugin uninstall <plugin>@rpfm-marketplace` and
+`claude plugin marketplace remove rpfm-marketplace`.
+
+Each plugin has a Claude Code manifest in `.claude-plugin/plugin.json`. It uses
+the same skills and runtimes as the Codex package, with two host differences:
+RPFM registers its endpoint with Claude Code's `"type": "http"` transport name,
+and Serena starts with `--context=claude-code` instead of `--context=codex`, so
+it omits tools that duplicate Claude Code's built-in file and shell tools.
 
 ## Set up Serena
 
@@ -166,10 +193,12 @@ This does not delete RPFM Server, packfiles, game installs, or RPFM settings.
 ## Repository layout
 
 ```text
-.agents/plugins/marketplace.json
+.agents/plugins/marketplace.json      (Codex catalog)
+.claude-plugin/marketplace.json       (Claude Code catalog)
 plugins/rpfm/
   plugin.json
   .codex-plugin/plugin.json
+  .claude-plugin/plugin.json
   mcp.json
   .mcp.json
   assets/rpfm.png
@@ -180,6 +209,7 @@ plugins/rpfm/
 plugins/serena/
   plugin.json
   .codex-plugin/plugin.json
+  .claude-plugin/plugin.json
   mcp.json
   .mcp.json
   skills/serena/SKILL.md
@@ -188,6 +218,7 @@ plugins/serena/
 plugins/rust-analyzer-mcp/
   plugin.json
   .codex-plugin/plugin.json
+  .claude-plugin/plugin.json
   mcp.json
   .mcp.json
   skills/rust-analyzer-mcp/SKILL.md
@@ -206,6 +237,13 @@ Run the offline packaging tests with Python 3.10+:
 
 ```sh
 python3 -m unittest discover -s tests -v
+```
+
+Validate the Claude Code marketplace and plugin manifests with the Claude Code CLI:
+
+```sh
+claude plugin validate .
+claude plugin validate plugins/rpfm
 ```
 
 Validate portable manifests and MCP configuration against the official schemas:

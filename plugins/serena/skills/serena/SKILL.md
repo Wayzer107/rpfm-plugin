@@ -13,7 +13,8 @@ and the active project's Serena instructions as authoritative.
 
 1. Confirm the intended project root from the task and workspace.
 2. If Serena has no active project, use its `activate_project` tool with the
-   intended directory. The Codex App may not start in the repository directory.
+   intended directory. The host app (for example the Codex App) may not start in the repository
+   directory.
 3. Read Serena's initial instructions and relevant project memories before
    choosing a workflow. Do not create or overwrite memories unless useful and
    within the user's request.
