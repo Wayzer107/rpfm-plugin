@@ -24,7 +24,7 @@ Do not execute untrusted tests/scripts merely to inspect a pack.
 ## RPFM plugin scripts
 
 These executable Python/Lua extensions in RPFM's config `scripts` folder are
-distinct from this Codex plugin. GUI Run Script exports selected DB/Loc files as
+distinct from this agent plugin. GUI Run Script exports selected DB/Loc files as
 TSV and others as raw data, invokes the chosen script with paths, and reimports
 original selections. Newly created/deleted export files are not automatically
 applied as pack additions/deletions. `scripts/last_run.log` is overwritten on

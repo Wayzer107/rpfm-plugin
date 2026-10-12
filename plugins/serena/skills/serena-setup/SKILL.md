@@ -32,13 +32,15 @@ serena init
 
 Reuse an existing Serena installation and configuration. Do not erase
 `~/.serena`, project memories, or project configuration to resolve a connection
-problem. The package already contains the Codex MCP registration; do not also
-run `serena setup codex` or add another global Serena server.
+problem. The package already contains the MCP registration for Codex (`--context=codex`)
+and Claude Code (`--context=claude-code`); do not also run `serena setup codex`,
+`serena setup claude-code`, or add another global Serena server.
 
-After setup, check the MCP list in Codex (`/mcp`) and make a harmless Serena
-tool call. If the shell can run Serena but Codex cannot, refresh the Codex
-process or follow the reference's executable-path instructions. A successful
-shell command alone does not prove Codex loaded the tools.
+After setup, check the host's MCP list (`/mcp` in Codex or Claude Code) and make
+a harmless Serena tool call. If the shell can run Serena but the host cannot,
+restart the host process or follow the reference's executable-path
+instructions. A successful shell command alone does not prove the host loaded
+the tools.
 
 ## Report
 

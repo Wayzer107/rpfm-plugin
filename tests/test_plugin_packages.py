@@ -9,6 +9,7 @@ from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / ".agents/plugins/marketplace.json"
+CLAUDE_CATALOG = ROOT / ".claude-plugin/marketplace.json"
 
 
 def read_json(path):
@@ -93,6 +94,45 @@ class PluginPackages(unittest.TestCase):
                     else:
                         self.assertIn(server["type"], ("streamable-http", "sse"))
                         self.assertIn(urlsplit(server["url"]).scheme, ("http", "https"))
+
+    def test_claude_catalog_matches_codex_catalog(self):
+        claude = read_json(CLAUDE_CATALOG)
+        codex = read_json(CATALOG)
+        self.assertEqual(claude["name"], codex["name"])
+        self.assertTrue(claude["owner"]["name"].strip())
+        self.assertEqual([entry["name"] for entry in claude["plugins"]],
+                         [entry["name"] for entry in codex["plugins"]])
+        for entry, codex_entry in zip(claude["plugins"], codex["plugins"]):
+            with self.subTest(plugin=entry["name"]):
+                self.assertEqual((ROOT / entry["source"]).resolve(),
+                                 (ROOT / codex_entry["source"]["path"]).resolve())
+
+    def test_claude_manifests_stay_synchronized(self):
+        for package in self.packages:
+            with self.subTest(plugin=package.name):
+                portable = read_json(package / "plugin.json")
+                claude = read_json(package / ".claude-plugin/plugin.json")
+                for field in ("name", "version", "description", "author", "keywords", "homepage", "license"):
+                    self.assertEqual(portable[field], claude[field], field)
+
+    def test_claude_mcp_servers_match_portable_config(self):
+        # Claude Code spells Streamable HTTP as "http"; Serena uses its claude-code context.
+        for package in self.packages:
+            with self.subTest(plugin=package.name):
+                portable = read_json(package / "mcp.json")["mcpServers"]
+                claude = read_json(package / ".claude-plugin/plugin.json").get("mcpServers")
+                if claude is None:
+                    self.assertTrue(all(server["type"] == "stdio" for server in portable.values()))
+                    continue
+                self.assertEqual(claude.keys(), portable.keys())
+                for name, server in claude.items():
+                    expected = dict(portable[name])
+                    if expected["type"] == "streamable-http":
+                        expected["type"] = "http"
+                    if "args" in expected:
+                        expected["args"] = [arg.replace("--context=codex", "--context=claude-code")
+                                            for arg in expected["args"]]
+                    self.assertEqual(server, expected)
 
     def test_skill_names_and_descriptions(self):
         for package in self.packages:

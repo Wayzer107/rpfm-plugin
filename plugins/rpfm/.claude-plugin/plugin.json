@@ -1,0 +1,26 @@
+{
+  "name": "rpfm",
+  "version": "0.4.0",
+  "description": "RPFM server setup and extensive Total War mod workflows, with manual coverage and live MCP reference.",
+  "author": {
+    "name": "Wayzer107",
+    "url": "https://github.com/Wayzer107"
+  },
+  "homepage": "https://github.com/Wayzer107/rpfm-plugin",
+  "repository": "https://github.com/Wayzer107/rpfm-plugin",
+  "license": "MIT",
+  "keywords": [
+    "rpfm",
+    "total-war",
+    "packfiles",
+    "modding",
+    "mcp",
+    "local"
+  ],
+  "mcpServers": {
+    "rpfm-tools": {
+      "type": "http",
+      "url": "http://127.0.0.1:45127/mcp"
+    }
+  }
+}

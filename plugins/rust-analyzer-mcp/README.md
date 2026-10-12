@@ -1,6 +1,6 @@
-# Rust Analyzer MCP Codex plugin 0.1.0
+# Rust Analyzer MCP plugin 0.1.0 for Codex and Claude Code
 
-Connect Codex to the local [`rust-analyzer-mcp`](https://github.com/zeenix/rust-analyzer-mcp)
+Connect Codex or Claude Code to the local [`rust-analyzer-mcp`](https://github.com/zeenix/rust-analyzer-mcp)
 server for semantic Rust navigation, diagnostics, completions, and refactoring
 support. The plugin package does not bundle the MCP server or rust-analyzer.
 
@@ -21,9 +21,20 @@ codex plugin add rust-analyzer-mcp@rpfm-marketplace --json
 Start a fresh Codex chat after installation. Restart the desktop app if its
 plugin inventory has not refreshed.
 
+With Claude Code, register the same repository and install from it:
+
+```powershell
+claude plugin marketplace add Wayzer107/rpfm-plugin
+claude plugin install rust-analyzer-mcp@rpfm-marketplace
+```
+
+Inside a Claude Code session the equivalent is `/plugin marketplace add
+Wayzer107/rpfm-plugin`, then `/plugin install rust-analyzer-mcp@rpfm-marketplace`.
+Restart Claude Code after installation so the MCP server and skills load.
+
 ## Set up the server
 
-Ask Codex:
+Ask Codex or Claude Code:
 
 > Use Rust Analyzer MCP setup to install rust-analyzer and the MCP server, then verify the connection.
 
@@ -41,7 +52,7 @@ diagnostics, and guides review of edits returned by the server. Diagnostic
 calls can run `cargo check`; feature-gated code may require a project-specific
 feature selection.
 
-The MCP process runs locally and can access files permitted to the Codex
+The MCP process runs locally and can access files permitted to the host
 process. Removing the plugin removes its MCP connection, not the Cargo-installed
 server, Rust toolchain, or rust-analyzer component.
 
@@ -49,6 +60,12 @@ server, Rust toolchain, or rust-analyzer component.
 
 ```powershell
 codex plugin remove rust-analyzer-mcp@rpfm-marketplace
+```
+
+With Claude Code:
+
+```powershell
+claude plugin uninstall rust-analyzer-mcp@rpfm-marketplace
 ```
 
 The server is MIT-licensed. See the

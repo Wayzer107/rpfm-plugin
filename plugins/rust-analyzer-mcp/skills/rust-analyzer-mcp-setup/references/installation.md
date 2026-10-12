@@ -2,7 +2,7 @@
 
 The plugin registers the local stdio command `rust-analyzer-mcp`. Install the
 Rust toolchain, rust-analyzer component, and server separately on the computer
-running Codex. The selected server release is version 0.4.0 from the
+running Codex or Claude Code. The selected server release is version 0.4.0 from the
 [`zeenix/rust-analyzer-mcp`](https://github.com/zeenix/rust-analyzer-mcp)
 project and crates.io.
 
@@ -62,12 +62,13 @@ rust-analyzer-mcp --help
 ```
 
 Cargo normally places the executable in `$HOME/.cargo/bin` on macOS/Linux or
-`%USERPROFILE%\.cargo\bin` on Windows. Start a new Codex process after Cargo
-updates PATH.
+`%USERPROFILE%\.cargo\bin` on Windows. Start a new Codex or Claude Code process after
+Cargo updates PATH.
 
 ## 4. Use the packaged MCP connection
 
-The plugin's portable `mcp.json` and Codex `.mcp.json` register:
+The plugin's portable `mcp.json` and the `.mcp.json` read by Codex and Claude
+Code register:
 
 ```json
 {
@@ -80,9 +81,9 @@ The plugin's portable `mcp.json` and Codex `.mcp.json` register:
 }
 ```
 
-Do not also add the same server with `codex mcp add`. After installation, start
-a new chat and check `/mcp`. If the shell finds the executable but Codex does
-not, refresh Codex from the updated shell or set `command` to the executable's
+Do not also add the same server with `codex mcp add` or `claude mcp add`.
+After installation, start a new chat and check `/mcp`. If the shell finds the
+executable but the host does not, restart the host from the updated shell or set `command` to the executable's
 full path using a host-supported MCP configuration. Do not edit the plugin
 cache.
 
@@ -92,7 +93,7 @@ project task, choose the actual Cargo workspace root with the
 
 ## Local behavior and limits
 
-The server is a child process of Codex and can access files available to that
+The server is a child process of the MCP host and can access files available to that
 process. `rust_analyzer_diagnostics` runs a fresh `cargo check`; workspace-wide
 diagnostics can take longer and may create normal Cargo build artifacts. The
 server uses the project's default Cargo features unless configured otherwise.

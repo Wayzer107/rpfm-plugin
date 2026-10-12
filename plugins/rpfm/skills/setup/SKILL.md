@@ -62,14 +62,17 @@ Do not add a Windows service or login startup unless requested.
 ## Register exactly one intended connection
 
 Installing the plugin already registers its MCP endpoint through mcp.json.
-Do not add a duplicate direct codex mcp registration during plugin setup.
+Do not add a duplicate direct registration (`codex mcp add` or `claude mcp add`)
+during plugin setup.
 The reference includes a direct registration alternative for users who want
 only the server without this plugin. Inspect existing config before changes,
 preserve unrelated entries, and validate the complete config after edits.
 
 If tools are absent but direct MCP checks succeed, explain that the current
-conversation may need refreshing. Start a fresh chat or restart Codex when
-needed, then verify actual callable tools. A shell probe does not prove host
+conversation may need refreshing. Start a fresh chat or restart the host
+(Codex or Claude Code) when needed; in Claude Code, `/mcp` shows the
+`plugin:rpfm:rpfm-tools` connection and can reconnect it. Then verify actual
+callable tools. A shell probe does not prove host
 tool exposure. The optional scripts/check_connection.py uses Python 3.10+
 and makes only read-only calls.
 

@@ -1,0 +1,19 @@
+{
+  "name": "rust-analyzer-mcp",
+  "version": "0.1.0",
+  "description": "Set up the rust-analyzer-mcp server and guide semantic Rust navigation, diagnostics, and refactoring.",
+  "author": {
+    "name": "Wayzer107",
+    "url": "https://github.com/Wayzer107"
+  },
+  "homepage": "https://github.com/Wayzer107/rpfm-plugin",
+  "repository": "https://github.com/Wayzer107/rpfm-plugin",
+  "license": "MIT",
+  "keywords": [
+    "rust",
+    "rust-analyzer",
+    "mcp",
+    "language-server",
+    "local"
+  ]
+}

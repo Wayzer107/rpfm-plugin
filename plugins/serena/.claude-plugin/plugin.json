@@ -1,0 +1,20 @@
+{
+  "name": "serena",
+  "version": "0.1.0",
+  "description": "Set up Serena's local MCP server and guide semantic code navigation, refactoring, and project workflows.",
+  "author": {
+    "name": "Wayzer107",
+    "url": "https://github.com/Wayzer107"
+  },
+  "homepage": "https://github.com/Wayzer107/rpfm-plugin",
+  "repository": "https://github.com/Wayzer107/rpfm-plugin",
+  "license": "MIT",
+  "keywords": ["serena", "coding-agent", "mcp", "semantic-code", "local"],
+  "mcpServers": {
+    "serena": {
+      "type": "stdio",
+      "command": "serena",
+      "args": ["start-mcp-server", "--project-from-cwd", "--context=claude-code"]
+    }
+  }
+}

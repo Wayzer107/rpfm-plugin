@@ -18,6 +18,17 @@ codex plugin marketplace upgrade rpfm-marketplace --json
 codex plugin add rpfm@rpfm-marketplace --json
 ```
 
+With Claude Code:
+
+```powershell
+claude plugin marketplace add Wayzer107/rpfm-plugin
+claude plugin install rpfm@rpfm-marketplace
+```
+
+Update with `claude plugin marketplace update rpfm-marketplace`. Claude Code
+reads `.claude-plugin/plugin.json`, which registers the same local endpoint as
+`plugin:rpfm:rpfm-tools`; check it with `/mcp` once RPFM Server is running.
+
 Start a fresh chat or restart the host when necessary to load changed skills.
 Use one intended RPFM plugin/connection per task; do not mix session keys from
 duplicate account/marketplace/direct registrations. An older account-backed
@@ -65,6 +76,13 @@ No pack edits are part of the checker.
 ```powershell
 codex plugin remove rpfm@rpfm-marketplace
 codex plugin marketplace remove rpfm-marketplace
+```
+
+With Claude Code:
+
+```powershell
+claude plugin uninstall rpfm@rpfm-marketplace
+claude plugin marketplace remove rpfm-marketplace
 ```
 
 Removal does not delete the server, packs, game installs, or settings.

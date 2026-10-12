@@ -36,14 +36,14 @@ adding the component. Do not overwrite an existing `rust-toolchain.toml`,
 project override, or Cargo configuration as a generic setup step.
 
 The plugin already registers the stdio MCP server. Do not also run `codex mcp
-add` for the same server. After installation, open a fresh Codex chat, confirm
-the server in `/mcp`, set the intended workspace with
+add` or `claude mcp add` for the same server. After installation, open a fresh
+chat (or restart Claude Code), confirm the server in `/mcp`, set the intended workspace with
 `rust_analyzer_set_workspace`, and make a harmless read-only call.
 
 ## Report
 
 Report toolchain, component, server executable, MCP connection, and callable
-tool checks separately. If the shell sees `rust-analyzer-mcp` but Codex does
-not, refresh the host process or follow the reference to set the full executable
-path in a host-supported MCP configuration. A shell check alone does not prove
-Codex loaded the server.
+tool checks separately. If the shell sees `rust-analyzer-mcp` but the host
+(Codex or Claude Code) does not, refresh the host process or follow the
+reference to set the full executable path in a host-supported MCP
+configuration. A shell check alone does not prove the host loaded the server.

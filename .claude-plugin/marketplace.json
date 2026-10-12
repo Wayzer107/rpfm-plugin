@@ -1,0 +1,30 @@
+{
+  "name": "rpfm-marketplace",
+  "owner": {
+    "name": "Wayzer107",
+    "url": "https://github.com/Wayzer107"
+  },
+  "metadata": {
+    "description": "Local development tools for Total War packfiles (RPFM), semantic code work (Serena), and Rust analysis (rust-analyzer-mcp)."
+  },
+  "plugins": [
+    {
+      "name": "rpfm",
+      "source": "./plugins/rpfm",
+      "description": "RPFM server setup and extensive Total War mod workflows, with manual coverage and live MCP reference.",
+      "category": "productivity"
+    },
+    {
+      "name": "serena",
+      "source": "./plugins/serena",
+      "description": "Set up Serena's local MCP server and guide semantic code navigation, refactoring, and project workflows.",
+      "category": "productivity"
+    },
+    {
+      "name": "rust-analyzer-mcp",
+      "source": "./plugins/rust-analyzer-mcp",
+      "description": "Set up the rust-analyzer-mcp server and guide semantic Rust navigation, diagnostics, and refactoring.",
+      "category": "productivity"
+    }
+  ]
+}
