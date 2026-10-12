@@ -1,0 +1,41 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "author": {
+    "name": "Wayzer107",
+    "url": "https://github.com/Wayzer107"
+  },
+  "description": "Set up Serena's local MCP server and guide semantic code navigation, refactoring, and project workflows.",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "category": "Productivity",
+        "defaultPrompt": [
+          "Use Serena to map this project and explain the relevant symbols.",
+          "Use Serena to trace this symbol's definition and references.",
+          "Use Serena for a focused symbol-aware refactor."
+        ],
+        "developerName": "Wayzer107",
+        "displayName": "Serena",
+        "longDescription": "Install Serena with its current upstream uv workflow, initialize it, and connect its local MCP server to Codex. Includes project activation, symbol-aware navigation, reference lookup, and focused refactoring guidance. Requires uv and a local Serena installation.",
+        "shortDescription": "Serena semantic code tools",
+        "websiteURL": "https://github.com/Wayzer107/rpfm-plugin"
+      },
+      "onboardingSkill": "./skills/serena-setup/SKILL.md"
+    }
+  },
+  "homepage": "https://github.com/Wayzer107/rpfm-plugin",
+  "keywords": [
+    "serena",
+    "coding-agent",
+    "mcp",
+    "semantic-code",
+    "local"
+  ],
+  "license": "MIT",
+  "name": "serena",
+  "version": "0.1.0"
+}

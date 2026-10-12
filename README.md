@@ -1,12 +1,13 @@
-# RPFM plugin marketplace
+# Codex developer tools marketplace
 
-A Codex plugin for Total War packfile inspection and editing through
-[RPFM Server](https://frodo45127.github.io/rpfm/manual/server/overview.html).
-Includes the original RPFM icon, extensive operational guides, and server setup instructions
-that work when RPFM is not installed or its server is not running.
+This Codex Git marketplace contains local development tools for Total War
+packfiles, semantic code work, and Rust analysis. The RPFM package provides the
+existing Total War workflows; Serena and Rust Analyzer MCP are separate plugins
+with their own setup and usage skills.
 
-This is a community integration, not an official RPFM release.
-Plugin version: **0.4.0**. Marketplace: **rpfm-marketplace**.
+The RPFM integration is a community project, not an official RPFM release.
+RPFM plugin version: **0.4.0**. Serena and Rust Analyzer MCP plugin versions:
+**0.1.0**. Marketplace: **rpfm-marketplace**.
 
 ## Register and install
 
@@ -27,6 +28,40 @@ codex plugin add rpfm@rpfm-marketplace --json
 These are two equivalent registration methods; choose one.
 Start a new Codex chat after installation. Restart the desktop app if it has
 not refreshed the plugin inventory.
+
+Install either additional plugin from the registered marketplace:
+
+```powershell
+codex plugin add serena@rpfm-marketplace --json
+codex plugin add rust-analyzer-mcp@rpfm-marketplace --json
+```
+
+Run `codex plugin marketplace upgrade rpfm-marketplace --json` first when the
+marketplace is already registered and new package entries are not visible.
+Each plugin starts its own local MCP process and requires its runtime to be
+installed on the same computer as Codex.
+
+## Set up Serena
+
+Ask Codex:
+
+> Use Serena setup to install Serena, initialize it, and verify its MCP tools.
+
+The plugin follows Serena's current upstream `uv` quick start and Codex server
+command. Serena is installed separately for each recipient; no Serena runtime
+is bundled. Read the [Serena package guide](plugins/serena/README.md) for
+prerequisites and the [complete setup reference](plugins/serena/skills/serena-setup/references/installation.md).
+
+## Set up Rust Analyzer MCP
+
+Ask Codex:
+
+> Use Rust Analyzer MCP setup to install rust-analyzer and the MCP server, then verify the connection.
+
+The setup guide uses the official Rust toolchain installer, adds the
+`rust-analyzer` and `rust-src` components, and installs the selected `rust-analyzer-mcp` crate.
+Read the [Rust Analyzer MCP package guide](plugins/rust-analyzer-mcp/README.md)
+and its [complete setup reference](plugins/rust-analyzer-mcp/skills/rust-analyzer-mcp-setup/references/installation.md).
 
 ## Get the server running
 
@@ -142,12 +177,59 @@ plugins/rpfm/
   skills/setup/SKILL.md
   skills/setup/references/server-installation.md
   scripts/check_connection.py
+plugins/serena/
+  plugin.json
+  .codex-plugin/plugin.json
+  mcp.json
+  .mcp.json
+  skills/serena/SKILL.md
+  skills/serena-setup/SKILL.md
+  skills/serena-setup/references/installation.md
+plugins/rust-analyzer-mcp/
+  plugin.json
+  .codex-plugin/plugin.json
+  mcp.json
+  .mcp.json
+  skills/rust-analyzer-mcp/SKILL.md
+  skills/rust-analyzer-mcp-setup/SKILL.md
+  skills/rust-analyzer-mcp-setup/references/installation.md
 ```
 
 Relative plugin source paths in the catalog resolve inside the cloned repository.
 The catalog follows the Codex .agents/plugins marketplace convention also
 used by obra/superpowers. This repository is a Git marketplace, not an
 OpenAI public-directory submission.
+
+## Development checks
+
+Run the offline packaging tests with Python 3.10+:
+
+```sh
+python3 -m unittest discover -s tests -v
+```
+
+Validate portable manifests and MCP configuration against the official schemas:
+
+```sh
+uv run scripts/validate_schemas.py
+```
+
+After installing Serena, rust-analyzer, and Rust Analyzer MCP, run the live
+integration checks. They use disposable Rust projects and Serena configuration:
+
+```sh
+PLUGIN_MCP_INTEGRATION=1 python3 -m unittest discover -s tests -v
+```
+
+The reusable `scripts/check_stdio.py` checker reads a package's MCP launch
+configuration, initializes the server, discovers tools, and optionally makes
+explicit tool calls. For example:
+
+```sh
+python3 scripts/check_stdio.py plugins/serena --cwd /path/to/project --call '{"name":"get_current_config","arguments":{}}'
+```
+
+See [verification results](VERIFICATION.md) for the tested versions and limits.
 
 ## License and provenance
 

@@ -1,0 +1,42 @@
+{
+  "interface": {
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "category": "Productivity",
+    "defaultPrompt": [
+      "Use Rust Analyzer MCP to trace this Rust symbol and its references.",
+      "Use Rust Analyzer MCP to inspect diagnostics in this Rust workspace.",
+      "Use Rust Analyzer MCP to plan a focused rename and review the returned edits."
+    ],
+    "developerName": "Wayzer107",
+    "displayName": "Rust Analyzer MCP",
+    "longDescription": "Install the rust-analyzer component and the rust-analyzer-mcp server from crates.io, then connect its local stdio MCP process to Codex. Includes workspace selection, semantic navigation, diagnostics, completions, and guidance for reviewing returned edits. Requires a Rust toolchain.",
+    "shortDescription": "Rust semantic analysis tools",
+    "websiteURL": "https://github.com/Wayzer107/rpfm-plugin"
+  },
+  "extensions": {
+    "com.openai": {
+      "onboardingSkill": "./skills/rust-analyzer-mcp-setup/SKILL.md"
+    }
+  },
+  "name": "rust-analyzer-mcp",
+  "version": "0.1.0",
+  "description": "Set up the rust-analyzer-mcp server and guide semantic Rust navigation, diagnostics, and refactoring.",
+  "author": {
+    "name": "Wayzer107",
+    "url": "https://github.com/Wayzer107"
+  },
+  "keywords": [
+    "rust",
+    "rust-analyzer",
+    "mcp",
+    "language-server",
+    "local"
+  ],
+  "homepage": "https://github.com/Wayzer107/rpfm-plugin",
+  "license": "MIT",
+  "skills": "./skills",
+  "mcpServers": "./.mcp.json"
+}
