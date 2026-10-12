@@ -1,3 +1,20 @@
+# 0.4.1
+
+- Fix Claude Code tool discovery for RPFM Server 5.1.1. It answers the newer
+  `server/discover` probe, so Claude Code required `ttlMs`/`cacheScope` in list
+  results and rejected the tool list ("tools fetch failed").
+- Add `plugins/rpfm/scripts/rpfm_stdio_bridge.py` and register it in the Claude
+  Code manifest. It refuses `server/discover`, fills the missing fields, and
+  starts an installed hidden `rpfm_server` when nothing is listening.
+- Codex is unchanged: its manifest and `mcp.json`/`.mcp.json` keep direct
+  Streamable HTTP registration.
+- Document the Claude desktop Code tab path (user skills plus user-scope bridge).
+
+Validation: 14 offline tests (including new bridge and Codex-isolation tests),
+`claude plugin validate`, official schema validation, an isolated Codex
+marketplace install showing direct HTTP, and a live Windows bridge session
+against RPFM Server 5.1.1 (155 tools listed, read-only calls succeeded).
+
 # 0.4.0
 
 - Expand operational guidance after an audit of all 50 linked manual pages.

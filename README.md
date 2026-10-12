@@ -64,9 +64,29 @@ Update with `claude plugin marketplace update rpfm-marketplace`; remove with
 
 Each plugin has a Claude Code manifest in `.claude-plugin/plugin.json`. It uses
 the same skills and runtimes as the Codex package, with two host differences:
-RPFM registers its endpoint with Claude Code's `"type": "http"` transport name,
-and Serena starts with `--context=claude-code` instead of `--context=codex`, so
+RPFM reaches its local endpoint through a bundled stdio compatibility bridge
+(`plugins/rpfm/scripts/rpfm_stdio_bridge.py`, Python 3.10+ as `python`), and Serena starts with `--context=claude-code` instead of `--context=codex`, so
 it omits tools that duplicate Claude Code's built-in file and shell tools.
+
+RPFM Server 5.1.1 answers the newer stateless `server/discover` probe, so
+current Claude Code validates its results against that MCP revision and rejects
+RPFM's tool list for lacking `ttlMs`/`cacheScope` (`/mcp` shows "tools fetch
+failed"). The bridge refuses `server/discover`, fills those two fields, and
+starts an installed `rpfm_server` hidden when nothing is listening. Codex is
+unaffected and keeps the direct Streamable HTTP registration.
+
+The Claude desktop app's Code tab loads plugins synced to the claude.ai account,
+not plugins installed from a CLI Git marketplace. There, copy
+`plugins/rpfm/skills/rpfm` to `~/.claude/skills/rpfm` and `skills/setup` to
+`~/.claude/skills/rpfm-setup` (renaming its `name:` to `rpfm-setup`), then register
+the bridge once at user scope:
+
+```powershell
+claude mcp add -s user rpfm-tools -- python -I <path-to>/plugins/rpfm/scripts/rpfm_stdio_bridge.py
+```
+
+Do not add that user registration in a terminal Claude Code that also has the
+plugin enabled; it would create a second RPFM connection.
 
 ## Set up Serena
 

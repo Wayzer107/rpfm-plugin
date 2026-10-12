@@ -131,12 +131,18 @@ codex mcp add rpfm --url http://127.0.0.1:45127/mcp
 codex mcp get rpfm
 ```
 
-When using Claude Code without the plugin:
+When using Claude Code without the plugin (including the Claude desktop app's
+Code tab, which does not load CLI Git-marketplace plugins), register the
+bundled stdio bridge rather than the raw HTTP endpoint. Current Claude Code
+rejects RPFM 5.1.1's raw tool list because it omits `ttlMs`/`cacheScope`:
 
 ```powershell
-claude mcp add --transport http rpfm http://127.0.0.1:45127/mcp
-claude mcp get rpfm
+claude mcp add -s user rpfm-tools -- python -I <plugin-dir>/scripts/rpfm_stdio_bridge.py
+claude mcp get rpfm-tools
 ```
+
+Copy the plugin's skills to `~/.claude/skills/rpfm` and
+`~/.claude/skills/rpfm-setup` (with `name: rpfm-setup`) for slash-command access.
 
 Check `codex mcp list` or `claude mcp list` first and preserve existing registrations. This alternative
 does not install RPFM or launch its server. Do not add it alongside the plugin
