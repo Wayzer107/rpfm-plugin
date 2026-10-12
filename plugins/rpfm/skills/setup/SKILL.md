@@ -15,7 +15,12 @@ is needed, explain the download size and destination and proceed within that
 request; do not ask again for routine setup steps already authorized.
 
 This plugin connects to http://127.0.0.1:45127/mcp on the computer running
-the local MCP client. It supplies the MCP registration and installation
+the local MCP client. Codex registers that endpoint directly. Claude Code uses
+the plugin's `scripts/rpfm_stdio_bridge.py`: without it, current Claude Code
+rejects RPFM 5.1.1's tool list ("tools fetch failed": missing `ttlMs`/
+`cacheScope`). The bridge also starts an installed server when none listens.
+The Claude desktop app's Code tab does not load CLI Git-marketplace plugins;
+use the user-skill and user-scope bridge registration in the server guide. It supplies the MCP registration and installation
 instructions. The server executable is installed separately.
 
 Read references/server-installation.md for the complete installation procedure,

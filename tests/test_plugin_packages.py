@@ -10,6 +10,9 @@ from urllib.parse import unquote, urlsplit
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / ".agents/plugins/marketplace.json"
 CLAUDE_CATALOG = ROOT / ".claude-plugin/marketplace.json"
+RPFM_HTTP = {"type": "streamable-http", "url": "http://127.0.0.1:45127/mcp"}
+RPFM_CLAUDE_BRIDGE = {"type": "stdio", "command": "python",
+                      "args": ["-I", "${CLAUDE_PLUGIN_ROOT}/scripts/rpfm_stdio_bridge.py"]}
 
 
 def read_json(path):
@@ -126,6 +129,13 @@ class PluginPackages(unittest.TestCase):
                     continue
                 self.assertEqual(claude.keys(), portable.keys())
                 for name, server in claude.items():
+                    if server == RPFM_CLAUDE_BRIDGE:
+                        # Claude Code reaches RPFM's HTTP endpoint through the
+                        # stdio compatibility bridge; Codex stays on direct HTTP.
+                        self.assertEqual(package.name, "rpfm")
+                        self.assertEqual(portable[name], RPFM_HTTP)
+                        self.assertTrue((package / "scripts/rpfm_stdio_bridge.py").is_file())
+                        continue
                     expected = dict(portable[name])
                     if expected["type"] == "streamable-http":
                         expected["type"] = "http"

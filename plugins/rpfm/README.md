@@ -1,4 +1,4 @@
-# RPFM plugin 0.4.0
+# RPFM plugin 0.4.1
 
 Community integration for local Total War packfile work through RPFM Server.
 The original RPFM icon is preserved. No server binary, game data, or API key is
@@ -26,8 +26,12 @@ claude plugin install rpfm@rpfm-marketplace
 ```
 
 Update with `claude plugin marketplace update rpfm-marketplace`. Claude Code
-reads `.claude-plugin/plugin.json`, which registers the same local endpoint as
-`plugin:rpfm:rpfm-tools`; check it with `/mcp` once RPFM Server is running.
+reads `.claude-plugin/plugin.json`, which registers `plugin:rpfm:rpfm-tools`
+through [`scripts/rpfm_stdio_bridge.py`](scripts/rpfm_stdio_bridge.py). The bridge
+connects to the same local endpoint, starts an installed server when none is
+listening, and adapts RPFM 5.1.1's list results to current Claude Code (see the
+marketplace README). It needs Python 3.10+ on PATH as `python`. Codex keeps the
+direct HTTP registration. Check the connection with `/mcp`.
 
 Start a fresh chat or restart the host when necessary to load changed skills.
 Use one intended RPFM plugin/connection per task; do not mix session keys from
